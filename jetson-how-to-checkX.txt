@@ -1,0 +1,35 @@
+1. L4T verion
+head -n 1 /etc/nv_tegra_release
+cat /etc/nv_tegra_release
+
+2. cuda
+cat /usr/local/cuda/version.txt
+
+3. opencv
+pkg-config --cflags opencv
+pkg-config --libs opencv
+
+or wrt program print 
+CV_MAJOR_VERSION
+CV_MINOR_VERSION
+
+4. spped up gpu
+
+ sudo ./jetson_clocks.sh
+or
+
+it is at
+/usr/bin/jetson_clocks
+
+so just run 
+$ sudo  jetson_clocks
+
+5. boost version:
+	You need: BOOST_VERSION
+
+	$locate `boost/version.hpp`
+or
+	$grep BOOST_LIB_VERSION /usr/include/boost/version.hpp
+or
+	$grep BOOST_VERSION /usr/include/boost/version.hpp.
+

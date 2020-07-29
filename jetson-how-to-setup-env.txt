@@ -1,0 +1,72 @@
+
+--- A. flush a SD Card ---
+
+A1. TX1, Tx2 and AXiver only
+
+1. create a linux desktop host machine (ubuntu18.04.4 LTS) 
+
+2. desktop/host: download jetpack SDK manager
+
+3. host & target
+   use SDK Manager to flush Tx1/Tx2/Xavier
+
+A2. Nano and AXiver NX
+    can create a sd image card from windows/mac	(easier)
+
+
+--- B. share a folder on jetson with windows --
+   Win7 & TX2: set a shared folder
+   B.1 TX2: create a folder (named xyz) -> right click -> "local network share" -> following instrurctions
+   B.2 Tx2: choose xyz -> right click -> "properties" -> change owner/group/other w/r permisions
+   B.3 win: computer ->  add network location: -> \\192.168.1.100\xyz
+
+   Now you are ready to edit your code (saved in target machine) from host machine such as visual studio in windows, and build it on target by MakeFiles.
+			
+--- C. install pkgs on jetson target systems --
+
+C0. build and install boost
+	$sudo apt-get install libboost-all-dev
+   
+C1. install gpu monitor
+
+C2. build and install opencv 4.1.1
+    $cd pkg/buildOpenCV
+    $./buildOpenCV.sh -s ~/pkg/.|& tee openCV_build.log 	
+
+C3. jetson-utils
+   a. $git clone https://github.com/dusty-nv/jetson-utils.git   
+   b. build
+	$ cd jetson-utils
+	$ mkdir build
+	$ cd build
+	$ cmake ../
+	$ make -j$(nproc)
+	$ sudo make install
+	$ sudo ldconfig   
+   
+
+C4. jetson-inference
+	$ sudo apt-get update
+	$ sudo apt-get install git cmake libpython3-dev python3-numpy
+	$ git clone --recursive https://github.com/dusty-nv/jetson-inference
+	$ cd jetson-inference
+	$ mkdir build
+	$ cd build
+	$ cmake ../
+	$ make -j$(nproc)
+	$ sudo make install
+	$ sudo ldconfig   
+
+ C5. install vscode 
+    ( from: https://www.jetsonhacks.com/2019/10/01/jetson-nano-visual-studio-code-python)
+	$ git clone https://github.com/JetsonHacksNano/installVSCode.git
+	$ cd installVSCode
+	$ ./installVSCode.sh
+	After installation, to run VSCode:
+	$ code-oss
+	
+ C6. insatll other tools
+	$ sudo apt-get install feh 
+	$ sudo apt-get install libncurses5-dev libncursesw5-dev
+	$ sudo apt-get install libgstrtspserver-1.0-dev gstreamer1.0-rtsp
+	
