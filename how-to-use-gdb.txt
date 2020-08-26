@@ -1,0 +1,21 @@
+gdb --args ./test.out cfg_wami_server2.xml 1
+> r   (run)
+
+>bt
+Print a backtrace of the entire stack: one line per frame for all frames in the stack. You can stop the backtrace at any time by typing the system interrupt character, normally C-c.
+backtrace n
+>bt n
+Similar, but print only the innermost n frames.
+backtrace -n
+>bt -n
+Similar, but print only the outermost n frames.
+
+
+background
+The call stack is divided up into contiguous pieces called stack frames, or frames for short; each frame is the data associated with one call to one function. 
+The frame contains the arguments given to the function, the function's local variables, and the address at which the function is executing.
+
+When your program is started, the stack has only one frame, that of the function main. This is called the initial frame or the outermost frame. Each time a 
+function is called, a new frame is made. Each time a function returns, the frame for that function invocation is eliminated. If a function is recursive, 
+there can be many frames for the same function. The frame for the function in which execution is actually occurring is called the innermost frame. 
+This is the most recently created of all the stack frames that still exist.
