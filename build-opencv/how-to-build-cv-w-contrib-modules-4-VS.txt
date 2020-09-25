@@ -1,0 +1,21 @@
+How to build cv w/ contribution modules for VS
+ (s.wu  9/25/2020)
+
+1. Motivation:
+	Since CV offitial pre-built release does not include extra contribution modules, you need to build it by yourself.
+	
+2. Clone cv source repositires from github and saved them at 
+	.\opencv-4.1.1\opencv_src
+	.\opencv-4.1.1\opencv_src\opencv_contrib-4.1.1
+	.\opencv-4.1.1\opencv_src\opencv-4.1.1
+
+3. set cmake based on how_to_build-cv-cmake.png
+   a. Config       -- set up building flags 
+   note do nor forget to set: 
+   OPENCV_EXTRA_MODULES_PATH="C:\pkg\opencv\opencv-4.1.1\opencv_src\opencv_contrib-4.1.1\modules" 
+   b. Generate     -- generate vs solution files
+   c. open project -- open sln by vs2017 then build debug and release versions
+-----------eof------------   
+   
+   
+ 
