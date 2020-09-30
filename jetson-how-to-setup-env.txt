@@ -30,6 +30,9 @@ C0. build and install boost
 C1. install gpu monitor
 
 C2. build and install opencv 4.1.1
+	$mkdir ~/pkg
+	$cd ~/pkg 
+	$git clone https://github.com/JetsonHacksNano/buildOpenCV
     $cd pkg/buildOpenCV
     $./buildOpenCV.sh -s ~/pkg/.|& tee openCV_build.log 	
 
