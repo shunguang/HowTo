@@ -27,7 +27,23 @@ A2. Nano and AXiver NX
 C0. build and install boost
 	$sudo apt-get install libboost-all-dev
    
-C1. install gpu monitor
+C1. install gpu usage monitor
+	#for python2.7
+	$sudo apt-get install python-matplotlib
+
+	#for python 3
+	sudo apt-get install python3-matplotlib	
+
+	#clone py code
+	$git clone https://github.com/jetsonhacks/gpuGraphTX
+
+	#run it
+	$ cd gpuGraphTX
+	$ ./gpuGraph.py
+	# or
+	$ python gpuGraph.py
+	# or
+	$ python3 gpuGraph.py
 
 C2. build and install opencv 4.1.1
 	$mkdir ~/pkg
