@@ -53,8 +53,9 @@ C2. build and install opencv 4.1.1
     $./buildOpenCV.sh -s ~/pkg/.|& tee openCV_build.log 	
 
 C3. jetson-utils
-   a. $git clone https://github.com/dusty-nv/jetson-utils.git   
-   b. build
+   a. $sudo apt install libnvinfer-dev
+   b. $git clone https://github.com/dusty-nv/jetson-utils.git   
+   c. build
 	$ cd jetson-utils
 	$ mkdir build
 	$ cd build
@@ -67,6 +68,7 @@ C3. jetson-utils
 C4. jetson-inference
 	$ sudo apt-get update
 	$ sudo apt-get install git cmake libpython3-dev python3-numpy
+        $ sudo apt install libnvinfer-dev
 	$ git clone --recursive https://github.com/dusty-nv/jetson-inference
 	$ cd jetson-inference
 	$ mkdir build
