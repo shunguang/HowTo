@@ -18,7 +18,7 @@ A2. Nano and AXiver NX
    Win7 & TX2: set a shared folder
    B.1 TX2: create a folder (named xyz) -> right click -> "local network share" -> following instrurctions
    B.2 Tx2: choose xyz -> right click -> "properties" -> change owner/group/other w/r permisions
-   B.3 win: computer ->  add network location: -> \\192.168.1.100\xyz
+   B.3 win: start->computer->right-click on 'Computer" icon on the left side area->add network location: -> \\192.168.1.100\xyz
 
    Now you are ready to edit your code (saved in target machine) from host machine such as visual studio in windows, and build it on target by MakeFiles.
 			
