@@ -1,0 +1,53 @@
+0 harware
+ link mac and tx2 with a ethernet cable, set fixed IPs in a local network
+
+1. on ubuntu
+
+1.1 sudo gedit /etc/samba/smb.conf
+  Rename MSHOME to WORKGROUP or whatever your workgroup's name is.
+
+Then go to the line where the security is defined and add ; at the beginning of the line.
+
+Scroll to the bottom of the file and add/edit your shared folders as follows:
+
+[<folder_name>]
+path = /home/<user_name>/<folder_name>
+available = yes
+valid users = <user_name>
+read only = no
+browseable = yes
+public = yes
+writable = yes
+Save and restart samba with:
+
+1.2
+sudo /etc/init.d/samba restart
+or
+sudo service smbd restart
+depending on the version of Linux you're using.
+
+or
+
+sudo service smbd restart
+depending on the version of Linux you're using.
+If you haven't already done so, create a user with:
+
+sudo smbpasswd -a yourname
+
+2. on Mac
+
+Now go to the network settings and give your Server IP, subnet mask and gateway. You can then connect on the Mac as previously stated (Go -> Connect To -> smb://)
+
+3. Access from Mac
+
+cmd line:
+/Volume/suas_wami
+
+/Volume/pkg
+
+The can use git in comand line window
+ 
+
+
+
+
