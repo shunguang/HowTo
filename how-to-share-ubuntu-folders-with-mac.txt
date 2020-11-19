@@ -1,7 +1,15 @@
 0 harware
  link mac and tx2 with a ethernet cable, set fixed IPs in a local network
 
-1. on ubuntu
+1. on ubuntu 
+
+----- option 1 from gui ------
+a) Files->yourFolder->right click->properties->local Network share
+b) using terminal window to change the permission
+$chmod -R 775 yourSharedFolder  
+
+
+----- option 2 -------
 
 1.1 sudo gedit /etc/samba/smb.conf
   Rename MSHOME to WORKGROUP or whatever your workgroup's name is.
@@ -32,7 +40,9 @@ sudo service smbd restart
 depending on the version of Linux you're using.
 If you haven't already done so, create a user with:
 
+1.3
 sudo smbpasswd -a yourname
+
 
 2. on Mac
 
