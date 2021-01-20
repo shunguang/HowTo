@@ -1,0 +1,136 @@
+
+A. flush os
+
+1. create a linux desktop host machine (ubuntu18.04.4 LTS) 
+2. Following the instructions on
+   https://www.ximea.com/support/wiki/apis/Linux_TX1_and_TX2_Support
+3. Install cuda SDK
+   $sudo apt update
+
+   -install cuda-toolkit(problem: no nvJpegEnc for 10.0, we need 10.1 and beyond, but ximea no update yet)
+
+   $sudo apt install cuda-toolkit-10-0
+
+   -install example for libvnjpeg.so using Tx2 HW do jpeg encoding
+   $sudo apt install nvidia-l4t-jetson-multimedia-api
+    
+   (problem: no nvJpegEnc for 10.0, we need 10.1 and beyond, but ximea no update yet)
+ 
+B. share a folder with windows or mac
+   1. Win7 & TX2: set a shared folder
+   B.1 TX2: create a folder (named xyz) -> right click -> "local network share" -> following instrurctions
+   B.2 Tx2: choose xyz -> right click -> "properties" -> change owner/group/other w/r permisions
+   B.3 win: start->computer->right-click on 'Computer" icon on the left side area->add network location: -> \\192.168.1.100\xyz
+
+   Now you are ready to edit your code (saved in target machine) from host machine such as visual studio in windows, and build it on target by MakeFiles.
+
+   2. Mac & TX2
+   see how-to-share-ubuntu-folders-with-mac.txt	
+			
+C. install pkgs on jetson target systems --
+
+C0. build and install boost
+	$sudo apt-get install libboost-all-dev
+   
+C1. install gpu usage monitor
+	#for python2.7
+	$sudo apt-get install python-matplotlib
+
+	#for python 3
+	sudo apt-get install python3-matplotlib	
+
+	#clone py code
+	$git clone https://github.com/jetsonhacks/gpuGraphTX
+
+	#run it
+	$ cd gpuGraphTX
+	$ ./gpuGraph.py
+	# or
+	$ python gpuGraph.py
+	# or
+	$ python3 gpuGraph.py
+
+C2. build and install opencv 4.1.1
+    #1.check out buildOpenCV.sh
+	$mkdir ~/pkg
+	$cd ~/pkg 
+	$git clone https://github.com/JetsonHacksNano/buildOpenCV
+    $cd pkg/buildOpenCV
+    :#2.edit buildOpenCV.sh by setting right flags to fit your project
+	# set OPENCV_ENABLE_NONFREE ON
+	# set others 
+    $./buildOpenCV.sh -s ~/pkg/.|& tee openCV_build.log 	
+
+C3. jetson-utils
+   a. $sudo apt install libnvinfer-dev
+   b. $git clone https://github.com/dusty-nv/jetson-utils.git      
+			   
+   (maybe openGL: $sudo apt-get install libglew-dev )
+	
+   c. build
+	$ cd jetson-utils
+	$ mkdir build
+	$ cd build
+	$ cmake ../
+	$ make -j$(nproc)
+	$ sudo make install
+	$ sudo ldconfig   
+   	
+
+C4. jetson-inference
+	$ sudo apt-get update
+	$ sudo apt-get install git cmake libpython3-dev python3-numpy
+        $ sudo apt install libnvinfer-dev
+	$ git clone --recursive https://github.com/dusty-nv/jetson-inference
+	$ cd jetson-inference
+	$ mkdir build
+	$ cd build
+	$ cmake ../
+	$ make -j$(nproc)
+	$ sudo make install
+	$ sudo ldconfig   
+
+ C5. install vscode 
+    ( from: https://www.jetsonhacks.com/2019/10/01/jetson-nano-visual-studio-code-python)
+	$ cd ~/pkg
+	$ git clone https://github.com/JetsonHacksNano/installVSCode.git
+	$ cd installVSCode
+	$ ./installVSCode.sh
+	After installation, to run VSCode:
+	$ code-oss
+
+ C6 install qt5.9.2
+	A. option 1 (see if you are lucky)
+	   $sudo apt-get install build-essential
+	   $sudo apt-get install qtcreator
+	   $sudo apt-get install qt5-defaul
+	   (Check the system logs to confirm that there are no related errors.)
+
+        B. option 2 (build qt in your environment)
+      	1. dowload qt-everywhere-opensource-src-5.9.2.tar.xz from https://download.qt.io/official_releases/qt/5.9/5.9.2/single/
+	2. extract xz file
+           $tar -xvf qt-everywhere-opensource-src-5.9.2.tar.xz to ~/pkg/qt-everywhere-opensource-src-5.9.2
+           $cd ~/pkg/qt-everywhere-opensource-src-5.9.2
+           $./configure -prefix $PWD/qtbase -opensource -nomake tests
+           #-----------after a while you will see---------------
+		Note: Also available for Linux: linux-clang linux-icc
+		Note: Dropped compiler flags '-pthread' when detecting library 'glib'.
+		Note: Disabling X11 Accessibility Bridge: D-Bus or AT-SPI is missing.
+		Note: Dropped compiler flags '-pthread' when detecting library 'gstreamer'.
+		Note: Dropped compiler flags '-pthread' when detecting library 'gstreamer_app'.
+		Qt is now configured for building. Just run 'make'.
+		Once everything is built, Qt is installed.
+		You should NOT run 'make install'.
+		Note that this build cannot be deployed to other machines or devices.
+		Prior to reconfiguration, make sure you remove any leftovers from
+		the previous build.
+   	   #--------------------------	
+	   $make -j4
+           $make install     	
+        3. qt will be installed into '/usr/local/Qt-5.9.2'.
+
+ C7. install other tools
+	$ sudo apt-get install feh 
+	$ sudo apt-get install libncurses5-dev libncursesw5-dev
+	$ sudo apt-get install libgstrtspserver-1.0-dev gstreamer1.0-rtsp
+	
