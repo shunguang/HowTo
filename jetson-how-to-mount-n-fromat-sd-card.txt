@@ -1,4 +1,9 @@
-#format and mount a microSd card on Tx2
+#-------------------------------------------
+#
+# format and mount a microSd card on Tx2
+#
+# by s. Wu, 01/25/2021   
+#--------------------------------------------
 
 1. insert microSd card:  Turn off TX2 and insert it into its slot at xEC2 board   
 
@@ -24,3 +29,56 @@
 
    c. Choose the "SD card Reader" on the left column, you will see where your card is mount, in my case it is mounted at /media/nvidia/c51966bf-blabla
 
+4. find uuid
+
+  $sudo ls -l /dev/disk/by-uuid/
+--------------------------------------------------------------------------------------------------
+nvidia@ubuntu:/media/aplSdCard$ ls -l /dev/disk/by-uuid/
+total 0
+lrwxrwxrwx 1 root root 11 Jan 25 16:48 31B5-99C1 -> ../../loop0
+lrwxrwxrwx 1 root root 15 Jan 25 16:48 a5774dbf-71ce-4bf1-bf75-07ebe3852e5d -> ../../mmcblk0p1
+lrwxrwxrwx 1 root root 13 Jan 25 16:48 c51966bf-af5d-4268-8b92-035585132244 -> ../../mmcblk2
+--------------------------------------------------------------------------------------------------
+  or
+ $sudo blkid
+ 
+--------------------------------------------------------------------------------------------------
+[sudo] password for nvidia: 
+/dev/loop0: SEC_TYPE="msdos" LABEL="L4T-README" UUID="31B5-99C1" TYPE="vfat"
+/dev/mmcblk0: PTTYPE="gpt"
+/dev/mmcblk0p1: UUID="a5774dbf-71ce-4bf1-bf75-07ebe3852e5d" TYPE="ext4" PARTLABEL="APP" PARTUUID="76c050eb-a674-427f-9a27-376018d3ba01"
+/dev/mmcblk0p2: PARTLABEL="mts-bootpack" PARTUUID="0665a69b-6ee3-47f8-9cad-062e27dc8757"
+/dev/mmcblk0p33: PARTLABEL="UDA" PARTUUID="7c91f6e6-5914-4cd3-ac61-1e7560f74160"
+...
+/dev/mmcblk2: UUID="c51966bf-af5d-4268-8b92-035585132244" TYPE="ext4"
+/dev/zram0: UUID="09b4eff9-84eb-463e-8237-fd253da8cc05" TYPE="swap"
+-------------------------------------------------------------------------------------------------------
+
+5. Mount card at a fixed location, i.e. /media/aplSdCard
+
+a. edit /ect/fstab
+   add the following line as the last line
+    UUID=c51966bf-af5d-4268-8b92-035585132244 /media/aplSdCard ext4 defaults 0 0
+-----------------------------------------------------------------------------------
+nvidia@ubuntu:~$ cat /etc/fstab 
+# Copyright (c) 2019, NVIDIA CORPORATION.  All rights reserved.
+#
+# NVIDIA CORPORATION and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA CORPORATION is strictly prohibited.
+#
+# /etc/fstab: static file system information.
+#
+# These are the filesystems that are always mounted on boot, you can
+# override any of these by copying the appropriate line from this file into
+# /etc/fstab and tweaking it as you see fit.  See fstab(5).
+#
+# <file system> <mount point>             <type>          <options>                               <dump> <pass>
+/dev/root            /                     ext4           defaults                                     0 1
+UUID=c51966bf-af5d-4268-8b92-035585132244 /media/aplSdCard ext4 defaults 0 0
+-----------------------------------------------------------------------------------
+ b. restart Tx2
+
+---eof-----
