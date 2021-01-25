@@ -1,0 +1,26 @@
+#format and mount a microSd card on Tx2
+
+1. insert microSd card:  Turn off TX2 and insert it into its slot at xEC2 board   
+
+2. format microSd card
+
+     a. Turn on TX2, open a console window
+
+     b find the microSd card location by using
+
+         $ lsblk 
+
+         (in my case i found it located at /dev/mmcblk2)
+
+     c. format the card
+
+        $sudo mkfs.ext4 /dev/mmcblk2
+
+3. find the mount location of the card in your file system
+
+   a. Open "search your computer" icon  (left top corner in desktop)
+
+   b. Type "disks" in the searching text box, then double click the disks icon  
+
+   c. Choose the "SD card Reader" on the left column, you will see where your card is mount, in my case it is mounted at /media/nvidia/c51966bf-blabla
+
