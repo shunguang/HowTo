@@ -23,7 +23,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=nvidia
+User=nvidia 
+#User=root
 WorkingDirectory=/home/nvidia/suas_wami/build/bin
 ExecStart=/usr/local/bin/start_wami.sh 
 
