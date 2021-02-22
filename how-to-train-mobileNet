@@ -1,0 +1,83 @@
+--- A. Preliminary Installations ---
+A1. PyTorch for Python 3.6
+    $ cd <jetson-inference>/build
+    $ ./install-pytorch.sh
+    NOTE: if the PyTorch installation tool does not appear, update JetPack to version 4.2+:
+           https://developer.nvidia.com/embedded/jetpack.
+           
+            NOTE: Skip "Load Pretrained Model" section if retraining SSDMobileNetV2
+            --- Load Pretrained Model ---
+                $ cd <jetson-inference>/tools
+                $ ./download-models.sh
+                Use navigator to select models to install
+                
+                Models relevant to pedestrian detection:
+                Network	CLI argument	NetworkType         enum	            Object classes
+                
+                SSD-Mobilenet-v1	    ssd-mobilenet-v1	SSD_MOBILENET_V1	91 (COCO classes)
+                SSD-Mobilenet-v2	    ssd-mobilenet-v2	SSD_MOBILENET_V2	91 (COCO classes)
+                SSD-Inception-v2	    ssd-inception-v2	SSD_INCEPTION_V2	91 (COCO classes)
+                ped-100	                pednet	            PEDNET	            pedestrians
+                multiped-500	        multiped	        PEDNET_MULTI	    pedestrians, luggage
+                facenet-120	            facenet	            FACENET	            faces
+                
+                Pass in Network CLI argument of desired model as --model argument for xeyes.out.
+                No --model specification will run default model: SSD-Mobilenet-v2
+                    $ xeyes.out --model=SSD-Inception-v2
+            --- Load Pretrained Model ---
+
+A2. Setup
+    $ cd <jetson-inference>/python/training/detection/ssd
+    $ wget https://nvidia.box.com/shared/static/djf5w54rjvpqocsiztzaandq1m3avr7c.pth -O models/mobilenet-v1-ssd-mp-0_675.pth
+    $ pip3 install -v -r requirements.txt
+
+--- B. Training ---
+usage: train_ssd.py [-h] [--dataset-type DATASET_TYPE]
+                    [--datasets DATASETS [DATASETS ...]] [--balance-data]
+                    [--net NET] [--freeze-base-net] [--freeze-net]
+                    [--mb2-width-mult MB2_WIDTH_MULT] [--base-net BASE_NET]
+                    [--pretrained-ssd PRETRAINED_SSD] [--resume RESUME]
+                    [--lr LR] [--momentum MOMENTUM]
+                    [--weight-decay WEIGHT_DECAY] [--gamma GAMMA]
+                    [--base-net-lr BASE_NET_LR]
+                    [--extra-layers-lr EXTRA_LAYERS_LR]
+                    [--scheduler SCHEDULER] [--milestones MILESTONES]
+                    [--t-max T_MAX] [--batch-size BATCH_SIZE]
+                    [--num-epochs NUM_EPOCHS] [--num-workers NUM_WORKERS]
+                    [--validation-epochs VALIDATION_EPOCHS]
+                    [--debug-steps DEBUG_STEPS] [--use-cuda USE_CUDA]
+                    [--checkpoint-folder CHECKPOINT_FOLDER]
+
+<DATA> = path to dataset
+<MODEL> = path to store re-trained model
+
+Argument	  Default	Description
+--data	       data/	the location of the dataset
+--model-dir	   models/	directory to output the trained model checkpoints
+--resume	   None	    path to an existing checkpoint to resume training from
+--batch-size   4	    try increasing depending on available memory
+--num-epochs   30	    up to 100 is desirable, but will increase training time
+--num-workers  2	    number of data loader threads (0 = disable multithreading)
+
+NOTE: When working with the NVIDIA Jetson Nano, it would be best to lower batch-size to 2 and workers to 1.
+      Higher batch-size and num threads may cause process to be killed due to memory overload.
+      
+B1. Run Training Script
+    $ cd <jetson-inference>/python/training/detection/ssd
+    $ python3 train_ssd.py --data=<DATA> --model-dir=<MODEL> --batch-size=2 --num-workers=1 --num-epochs=100
+
+B2. Converting Re-trained Model to ONNX
+        -custom models need to be in a specific format. ONXX files are supported.
+    $ cd <jetson-inference>/python/training/detection/ssd
+    $ python3 onxx_export.py --model-dir=<MODEL>
+
+--- C. Running the Model with xEyes---
+ONXX = name of .onxx file
+LABFILE = name of labels .txt file
+<LABELS> = path to class labels .txt file
+    $cd build_xeyes/bin
+    $./xeyes.out --model=<MODEL>/ONXX.onxx
+    --labels=<LABELS>/LABFILE.txt
+    --input_blob=input_0
+    --output_cvg=scores
+    --output_bbox=boxes
