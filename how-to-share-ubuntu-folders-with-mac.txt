@@ -8,6 +8,10 @@ a) Files->yourFolder->right click->properties->local Network share
 b) using terminal window to change the permission
 $chmod -R 775 yourSharedFolder  
 
+c) you may have: "net usershare' returned error 255: net usershare add: failed to add share suas_wami. Error was Operation not permitted"
+   googled but it does not solve my prolem, then go to
+   /var/lib/samba/usershares
+   found there exists the same file/folder name shared by another user. resolve teh confilct and problem solved.
 
 ----- option 2 -------
 
