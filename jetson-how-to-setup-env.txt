@@ -11,8 +11,13 @@ A1. TX1, Tx2 and AXiver only
    use SDK Manager to flush Tx1/Tx2/Xavier
 
 A2. Nano and AXiver NX
-    can create a sd image card from windows/mac	(easier)
-
+    # can create a sd image card from windows/mac (easier)
+    # follow getting-started tutorial:
+    	https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#write
+    # increase swap memory (usually 2 GiB is not enough)
+	   $ git clone https://github.com/JetsonHacksNano/installSwapfile
+	   $ cd installSwapfile
+	   $./installSwapfile.sh
 
 --- B. share a folder on jetson with windows --
    Win7 & TX2: set a shared folder
@@ -25,6 +30,7 @@ A2. Nano and AXiver NX
 --- C. install pkgs on jetson target systems --
 
 C0. build and install boost
+	$sudo apt-get update
 	$sudo apt-get install libboost-all-dev
    
 C1. install gpu usage monitor
@@ -46,15 +52,23 @@ C1. install gpu usage monitor
 	$ python3 gpuGraph.py
 
 C2. build and install opencv 4.1.1
-    #1.check out buildOpenCV.sh
+    #0.JetPack4.3+(2019 Dec) comes with built in OpenCV4.1.1 (installed when writing SD card image)
+        	#if you pass the checks, skip to C3.
+    	#check Jetpack version
+    	$dpkg-query --show nvidia-l4t-core
+	#check/confirm OpenCV4.1.1 installation
+	$dpkg -l | grep libopencv
+    #1.clone buildOpenCV git repo
 	$mkdir ~/pkg
 	$cd ~/pkg 
 	$git clone https://github.com/JetsonHacksNano/buildOpenCV
-    $cd pkg/buildOpenCV
-    :#2.edit buildOpenCV.sh by setting right flags to fit your project
+    	$cd buildOpenCV
+    #2.edit buildOpenCV.sh by setting right flags to fit your project
+    	# use vim to set cmake flags
 	# set OPENCV_ENABLE_NONFREE ON
-	# set others 
-    $./buildOpenCV.sh -s ~/pkg/.|& tee openCV_build.log 	
+	# set others...
+    #3.run sript
+    	$./buildOpenCV.sh -s ~/pkg/.|& tee openCV_build.log 	
 
 C3. jetson-utils
    a. $sudo apt install libnvinfer-dev
@@ -68,7 +82,6 @@ C3. jetson-utils
 	$ sudo make install
 	$ sudo ldconfig   
    
-
 C4. jetson-inference
 	$ sudo apt-get update
 	$ sudo apt-get install git cmake libpython3-dev python3-numpy
@@ -94,7 +107,7 @@ C4. jetson-inference
 	A. option 1 (see if you are lucky)
 	   $sudo apt-get install build-essential
 	   $sudo apt-get install qtcreator
-	   $sudo apt-get install qt5-defaul
+	   $sudo apt-get install qt5-default
 	   (Check the system logs to confirm that there are no related errors.)
 
         B. option 2 (build qt in your environment)
@@ -117,8 +130,14 @@ C4. jetson-inference
 		the previous build.
    	   #--------------------------	
 	   $make -j4
+	   #----------common build errors-------------
+	   	If you experience some build errors after make-j4,
+		Delete the qt-everywhere-opensource-src-5.9.2 repo and restart from step 2. 
+		Replace the previous configure call with:
+	$./configure -prefix QtNew -release -opensource -confirm-license -static -qt-xcb -no-glib -no-pulseaudio -no-alsa -opengl desktop -nomake examples -nomake tests
+	   #------------------------------------------
            $make install     	
-        3. qt will be installed into '/usr/local/Qt-5.9.2'.
+        5. qt will be installed into '/usr/local/Qt-5.9.2'.
 
  C7. install other tools
 	$ sudo apt-get install feh 
