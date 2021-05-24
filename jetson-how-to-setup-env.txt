@@ -88,7 +88,7 @@ C4. jetson-inference
 	$ cd installVSCode
 	$ ./installVSCode.sh
 	After installation, to run VSCode:
-	$ code-oss
+	$ code-oss (or $code)
 
  C6 install qt5.9.2
 	A. option 1 (see if you are lucky)
