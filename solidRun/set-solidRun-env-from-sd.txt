@@ -1,0 +1,162 @@
+1. Flashing an SD card
+
+https://developer.solid-run.com/knowledge-base/i-mx6-debian/
+
+https://developer.solid-run.com/knowledge-base/flashing-an-sd-card/#linux
+
+ 
+2. Knowledge based
+
+https://developer.solid-run.com/article-categories/software/
+
+ 
+3. How  to find the process? i.MX6 or i.MX8?
+
+4. Software installer
+
+https://developer.solid-run.com/knowledge-base/cubox-i-getting-started/#software-install
+
+https://www.digikey.com/en/blog/cubox-i-by-solidrun-quick-start-guide
+
+ 
+#------------------------------------------------
+# How to install image to SD card from Mac
+#------------------------------------------------
+1. Download img file(e.g., sr-imx6-debian-buster-20190925-cli.img.xz) and extracted
+Install “The Uniarchiver” from apple store
+Using “the Uniarchiver” extract the image file
+
+right click -> open with -> the Uniarchiver, then
+
+$cd Download/myImg/sr-imx6-debian-buster-20190925-cli.img
+
+ 
+
+2. Format SD card (see Appendix A)
+
+3. Insert SD card and do the following
+
+$ diskutil list
+---------------------------------
+/dev/disk0 (internal):
+
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+
+   0:      GUID_partition_scheme                         500.3 GB   disk0
+
+   1:                        EFI EFI                     314.6 MB   disk0s1
+
+   2:                 Apple_APFS Container disk1         500.0 GB   disk0s2
+
+ 
+
+/dev/disk1 (synthesized):
+
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+
+   0:      APFS Container Scheme -                      +500.0 GB   disk1
+
+                                 Physical Store disk0s2
+
+   1:                APFS Volume wu                      426.4 GB   disk1s1
+
+   2:                APFS Volume Preboot                 86.5 MB    disk1s2
+
+   3:                APFS Volume Recovery                1.6 GB     disk1s3
+
+   4:                APFS Volume VM                      3.2 GB     disk1s4
+
+ 
+
+/dev/disk2 (external, physical):
+
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+
+   0:     FDisk_partition_scheme                        *7.9 GB     disk2
+
+   1:                 DOS_FAT_32 SOLIDRUNSD              7.9 GB     disk2s1
+
+ 
+
+# if mounted somewhere
+
+$ sudo diskutil unmount $device.  (where $device=/dev/disk2)
+
+
+# all the partitions (there's also a "force" option, see the manual)
+
+$ sudo diskutil unmountDisk $device (where $device=/dev/disk2)
+
+
+$sudo dd if= sr-imx6-debian-buster-20190925-cli.img of=/dev/rdisk2 bs=4096
+
+# remember zip drives? this would launch them. good times!
+
+$ sudo diskutil eject $device  (where $device=/dev/disk2)
+
+---------------------------------------------------
+
+Appendix A: Format SD card on Mac
+
+---------------------------------------------------
+         Connect the SD card to your computer by using an external card reader.  Save all the files from your SD card that you want to keep to your computer before moving to step 2.  Formatting the SD card deletes all the data off of the card.
+
+1.    Note – If you’re using a Micro SD card, please insert the Micro SD card into the SD card adapter that came with card.  Connect the SD card adapter to your computer by using an external card reader.
+
+2.    Also note – Mac OS 10.6.5 or earlier does not support exFAT format, which most 64 GB SD cards are formatted to.  This means that you won't be able to format or use exFAT card on your computer.  In this case, we'd recommend either upgrading your OS to 10.6.6 or later, or using an SD card that's already formatted to MS-DOS (FAT) or FAT32 to complete the below steps.
+
+·         Open Disk Utility.  To do this, click on the magnifying glass in the top-right corner of your computer screen.  Type “disk utility” in the search box that opens, then click on the “Disk Utility” Application that comes up.
+
+·         Find the SD card in the left side of the window.  It’ll be named something like NO NAME or UNTITLED.
+
+·         Click the ERASE tab in the middle of the window.
+
+·         Next, click on the Format dropdown menu.  Select MS-DOS (FAT) if the card is 32 GB or smaller.  If it’s a 64GB card, please select ExFAT.
+
+·         A message will appear asking, “Are you sure you want to erase the partition “[YOUR SD CARD NAME]?”  Click Erase. The computer will delete the contents of your SD card and format it. You’re all done.
+
+
+----
+#up grade debian buster 10 pkgs
+----
+
+#upgrade Debian 10 pkgs
+
+$sudo apt update
+
+$sudo apt upgrade
+
+$sudo reboot
+
+ 
+
+#install gcc and run helloworld.cpp
+
+$sudo apt-get update
+
+$sudo apt-get install --reinstall build-essential
+
+$gcc test.cpp -lstdc++
+
+$./a.out
+
+ 
+
+#the following code does not work, it will halt the boot process.
+
+#install graphic gnome 3 classic destop envionment (https://linuxhint.com/install_gnome_debian_10_minimal_server/)
+
+$sudo tasksel install desktop gnome-desktop
+
+$sudo tasksel install laptop
+
+$sudo systemctl set-default graphical.target
+
+$sudo reboot
+------------------end -----
+ 
+ 
+
+
+
+

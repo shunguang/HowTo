@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#1. Installing bootstrap dependencies
+sudo apt-get install python-rosdep python-rosinstall-generator python-vcstool python-rosinstall build-essential
+
+#ROSDISTRO=noetic
+ROSDISTRO=melodic
+WS_PATH=~/pkg/ros_catkin_ws_$ROSDISTRO
+
+sudo rosdep init
+sudo rosdep update
+
+#---------------------------
+#2. install
+#--------------------------
+#2.1 Create a catkin Workspace
+
+mkdir $WS_PATH
+cd $WS_PATH
+
+mkdir src
+sudo rosinstall_generator ros_base --rosdistro $ROSDISTRO --deps --tar > $ROSDISTRO-ros_base.rosinstall
+sudo vcs import src < $ROSDISTRO-ros_base.rosinstall
+
+#or other ros-pkgs: robot, perception
+sudo rosinstall_generator perception --rosdistro $ROSDISTRO --deps --tar > $ROSDISTRO-perception.rosinstall
+sudo vcs import src < $ROSDISTRO-perception.rosinstall
+
+#Resolving Dependencies
+
+sudo rosdep install --from-paths src --ignore-src --rosdistro $ROSDISTRO -y
+
+#2.2 build and install
+#Building the catkin Workspace
+sudo ./src/catkin/bin/catkin_make_isolated --install --install-space /opt/ros/$ROSDISTRO -DCMAKE_BUILD_TYPE=Release
+
+#--------------------------------------
+#3.ros path
+#--------------------------------------
+#setup paths for current session
+source /opt/ros/$ROSDISTRO/setup.bash
+
+#setup paths bash session
+echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+#then use to check the relative env added by ros
+
+#check envs
+$printenv
+#------ eof -------------------------------  

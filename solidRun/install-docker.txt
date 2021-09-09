@@ -1,0 +1,396 @@
+    1  ls
+    2  sudo apt update
+    3  sudo apt upgrade
+    4  sudo reboot
+    5  ls
+    6  cd IrVo/src/fast-dnn/
+    7  ls
+    8  ls
+    9  make
+   10  cmake --version
+   11  make
+   12  rm -rf *
+   13  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4 -DENABLE_OPENCV_CUDA=OFF -DENABLE_TENSORFLOW=OFF
+   14  cd /usr/lib/ssl
+   15  ls
+   16  ls -al
+   17  echo $OPENSSLDIR
+   18  echo $OPENSSL_ROOT_DIR
+   19  cat openssl.cnf 
+   20  ls
+   21  openssl --version
+   22  openssl help
+   23  openssl version -a
+   24  cd ..
+   25  pwd
+   26  cd local/
+   27  ls
+   28  sudo find / -name ssl
+   29  ls /usr/lib/ssl/
+   30  ls /etc/ssl
+   31  ls /usr/include/boost/asio/ssl
+   32  pwd
+   33  ls
+   34  cd IrVo/
+   35  cd src/
+   36  ls
+   37  cd fast-dnn/
+   38  pwd
+   39  ls
+   40  cat install-dependencies.sh 
+   41  pwd
+   42  ls
+   43  cat CMakeLists.txt 
+   44  vi CMakeLists.txt 
+   45  ls
+   46  mkdir build
+   47  cd build
+   48  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4
+   49  pwd
+   50  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4
+   51  ls
+   52  cmake clean
+   53  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4
+   54  ls
+   55  rm -rf *
+   56  ls
+   57  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4
+   58  ls
+   59  rm -rf *
+   60  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4
+   61  make -j4
+   62  g++ version
+   63  g++ --version
+   64  gcc -v --help 2> /dev/null | sed -n '/^ *-std=\([^<][^ ]\+\).*/ {s//\1/p}'
+   65  g++ -v --help 2> /dev/null | sed -n '/^ *-std=\([^<][^ ]\+\).*/ {s//\1/p}'
+   66  gcc -v --help 2> /dev/null | sed -n '/^ *-std=\([^<][^ ]\+\).*/ {s//\1/p}'
+   67  cd ../../
+   68  ls
+   69  cd ..
+   70  cd src--/
+   71  pwd
+   72  ls
+   73  cd fast-dnn/
+   74  ls
+   75  mkdir build
+   76  cd build
+   77  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4
+   78  cmake --version
+   79  debian --version
+   80  os --version
+   81  lsb_release -al
+   82  lsb_release -a
+   83  wget
+   84  pwd
+   85  sudo apt-install boost
+   86  sudo apt-get install boost
+   87  cd pkg/
+   88  cd HowTo/
+   89  ls
+   90  cat how-to-set-Tx2-xEc2-env.txt 
+   91  sudo apt-get install libboost-all-dev
+   92  cd build-opencv/
+   93  ls
+   94  vi cmd2buildcv.txt 
+   95  cat cmd2buildcv.txt 
+   96  sudo apt-get install libeig3-dev
+   97  vi cmd2buildcv.txt 
+   98  ls
+   99  cd ..
+  100  ls
+  101  tar -xzf cmake-3.21.1.tar.gz 
+  102  ls
+  103  cd cmake-3.21.1
+  104  ls
+  105  ls -al
+  106  ls
+  107  mkdir build
+  108  cd build/
+  109  ls
+  110  cmake ..
+  111  openssl version -a
+  112  source ~/.bashrc 
+  113  ls
+  114  rm -rf *
+  115  cmake ..
+  116  cmake .. -DCMAKE_USE_OPENSSL=OFF
+  117  make
+  118  make install
+  119  sudo make install
+  120  sudo apt-get update
+  121  sudo apt-get install --reinstall build-essential
+  122  gcc
+  123  ls
+  124  pwd
+  125  mkdir test
+  126  ls
+  127  cd test/
+  128  ls
+  129  vi test.cpp
+  130  gcc test.cpp -lstdc++
+  131  ls
+  132  ./a.out 
+  133  pwd
+  134  sudo apt-get install cmake
+  135  cd ..
+  136  mkdir pkg
+  137  cd pkg/
+  138  ls
+  139  git
+  140  sudo apt-get install git
+  141  git clone --branch 4.1.0 https://github.com/opencv/opencv.git
+  142  git clone --branch 4.1.0 https://github.com/opencv/opencv_contrib.git
+  143  ls
+  144  cd opencv
+  145  mkdir build
+  146  cd build/
+  147  ls
+  148  cmake -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DCMAKE_INSTALL_PREFIX=/opt/kmt -DOPENCV_EXTRA_MODULES=
+  149  pwd
+  150  ls ~/pkg/opencv
+  151  ls ~/pkg/
+  152  ls ~/pkg
+  153  ls ~/pkg/opencv_contrib/
+  154  cmake -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DCMAKE_INSTALL_PREFIX=/opt/kmt -DOPENCV_EXTRA_MODULES=~/pkg/opencv_contrib/modules
+  155  ls
+  156  cd ..
+  157  ls
+  158  cd build/
+  159  ls
+  160  ../cmake -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DCMAKE_INSTALL_PREFIX=/opt/kmt -DOPENCV_EXTRA_MODULES=~/pkg/opencv_contrib/modules
+  161  cmake -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DCMAKE_INSTALL_PREFIX=/opt/kmt -DOPENCV_EXTRA_MODULES=~/pkg/opencv_contrib/modules ../
+  162  ls
+  163  sudo apt-get install libeig3-dev
+  164  sudo apt-get install libjpeg-dev
+  165  sudo apt-get install libpng-dev
+  166  df
+  167  sudo apt-get install libv4l-dev
+  168  sudo apt-get install libtiff5-dev
+  169  sudo apt-get install zliblg-dev
+  170  sudo apt-get install zlib1g-dev
+  171  sudo apt-get install libswscale-dev
+  172  sudo apt-get install libavcode-dev
+  173  sudo apt-get install libavcodec-dev
+  174  sudo apt-get install -y libavformat-dev libavutil-dev
+  175  sudo apt-get install -y libglew-dev
+  176  sudo apt-get install -y libgtk2.0-dev libgtk-3-dev pkg-config
+  177  cmake -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DWITH_LIBV4L=ON -DWITH_V4L=ON -DCMAKE_INSTALL_PREFIX=/opt/kmt -DCPACK_BINARY_DEB=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES=~/pkg/opencv_contrib/modules ../
+  178  ls
+  179  history
+  180  history > cmd2buildcv.txt
+  181  ls
+  182  cat cmd2buildcv.txt 
+  183  ls
+  184  make -j4
+  185  ls *log*
+  186  ls *og*
+  187  vi CMakeDownloadLog.txt 
+  188  ls 
+  189  sudo make install
+  190  ls
+  191  df
+  192  ifconfig
+  193  sudo apt-get install net-tools 
+  194  ifconfig
+  195  /sbin/ifconfig 
+  196  cd ~
+  197  pwd
+  198  ls
+  199  ls -al
+  200  vi .bashrc 
+  201  sudo vi .bashrc 
+  202  sudo apt-get update
+  203  sudo apt-get install vim
+  204  ls
+  205  vim .bashrc 
+  206  ~/.bashrc
+  207  sudo ~/.bashrc
+  208  ls
+  209  ls -al
+  210  sudo ./.bashrc
+  211  sudo ./.bashrc 
+  212  source ./.bashrc 
+  213  echo $PATH
+  214  ifconfig
+  215  ls
+  216  pwd
+  217  cd pkg/
+  218  ls
+  219  git clone https://gitbub.com/shunguang/pkg.git
+  220  git clone https://gitbub.com/shunguang/HowTo.git
+  221  git clone https://github.com/shunguang/HowTo.git
+  222  ls
+  223  rm -rf pkg
+  224  rm -rf HowTo/
+  225  git clone https://github.com/shunguang/HowTo.git
+  226  ls
+  227  cd HowTo/
+  228  ls
+  229  cd build-opencv/
+  230  ls
+  231  cd ..
+  232  pwd
+  233  ifconfig
+  234  ls
+  235  cd /opt/kmt/lib/cmake/
+  236  ls
+  237  cd opencv4/
+  238  ls
+  239  cd ~
+  240  cd pkg/opencv/build/
+  241  ls
+  242  mv cmd2buildcv.txt ~/pkg/HowTo/build-opencv/.
+  243  cd ~/pkg/HowTo/
+  244  ls
+  245  cd build-opencv/
+  246  ls
+  247  cat cmd2buildcv.txt 
+  248  cd /
+  249  find / -name eigen3-config.cmake
+  250  sudo find / -name eigen3-config.cmake
+  251  sudo find / -name eigen3*.*
+  252  sudo find / -name eig3*.*
+  253  sudo reboot
+  254  s
+  255  ls
+  256  cd IrVo/src/fast-dnn/
+  257  ls
+  258  cd build
+  259  ls
+  260  cmake .. -DCMAKE_PREFIX_PATH=/opt/kmt -DENABLE_OPENCV_CUDA=OFF -DENABLE_TENSORFLOW=OFF -DENABLE_TENSORFLOW_LITE=OFF
+  261  make -j4
+  262  ls
+  263  cmake .. -DCMAKE_PREFIX_PATH=/opt/kmt -DENABLE_OPENCV_CUDA=OFF -DENABLE_TENSORFLOW=OFF -DENABLE_TENSORFLOW_LITE=OFF
+  264  cd ~/pkg/opencv_contrib/
+  265  cd modules/
+  266  pwd
+  267  df
+  268  ls
+  269  cd ~/IrVo/
+  270  ls
+  271  cd src
+  272  ls
+  273  cd fast-dnn/
+  274  ls
+  275  cd build
+  276  ls
+  277  cmake .. -DCMAKE_PREFIX_PATH=/opt/kmt -DENABLE_OPENCV_CUDA=OFF -DENABLE_TENSORFLOW=OFF -DENABLE_TENSORFLOW_LITE=OFF
+  278  make -j4
+  279  ls
+  280  cd ..
+  281  ls
+  282  cd src-new/
+  283  cd fast-dnn/
+  284  ls
+  285  cd build
+  286  ls
+  287  rm rf *
+  288  rm rf *.*
+  289  sudo rm rf *.*
+  290  ls
+  291  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4
+  292  make -j4
+  293  cmake .. -DOpenCV_DIR=/opt/kmt/lib/cmake/opencv4 -DENABLE_OPENCV_CUDA=OFF -DENABLE_TENSORFLOW=OFF -DENABLE_TENSORFLOW_LITE=OFF
+  294  make -j4
+  295  lsb_release -a
+  296  ls
+  297  cd test/
+  298  curl https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_lbgm.i > 0ae0675534aa318d9668f2a179c2a052-boostdesc_lbgm.i
+  299  ls
+  300  cmake --version
+  301  ls
+  302  cd IrVo/
+  303  ls
+  304  cd src
+  305  ls
+  306  cd fast-dnn/
+  307  cd build
+  308  ls
+  309  opt
+  310  ls
+  311  cd /
+  312  ls
+  313  cd opt
+  314  ls
+  315  cd kmt
+  316  ls
+  317  cd include/
+  318  ls
+  319  cd opencv4/
+  320  ls
+  321  cd opencv2/
+  322  ls
+  323  cd ..
+  324  ls
+  325  cd ..
+  326  ls
+  327  cd lib
+  328  ls
+  329  cd ..
+  330  ls
+  331  cd include/
+  332  ls
+  333  cd openCV4
+  334  cd opencv4/
+  335  ls
+  336  cd opencv2/
+  337  ls
+  338  ls x*.*
+  339  ls
+  340  cd ..
+  341  ls
+  342  cd ~/pkg/
+  343  ls
+  344  cd opencv_contrib/
+  345  ls
+  346  ls ~/pkg/HowTo/build-opencv/
+  347  cat ~/pkg/HowTo/build-opencv/cmd2buildcv.txt 
+  348  ls
+  349  ls -al
+  350  cd modules/
+  351  ls
+  352  cd xfeatures2d/
+  353  ls -al
+  354  pwd
+  355  ifconfig
+  356  quit
+  357  shutdown
+  358  sudo shutdown
+  359  debian
+  360  sudo shutdown -c
+  361  sudo shutdown now
+  362  ls
+  363  apt search ros-noetic
+  364  sudo apt update
+  365  sudo apt install ros-noetic-ros-base
+  366  sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+  367  sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+  368  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+  369  sudo apt update
+  370  sudo apt install ros-noetic-ros-base
+  371  sudo apt get-install ros-noetic-ros-base
+  372  sudo apt-get install ros-noetic-ros-base
+  373  uname -rvmp
+  374  arm-linux-gnueabihf-gcc -v
+  375  arm-linux-gnueabihf-g++ -v
+  376  uname -rvmp
+  377  dpkg --print-architecture
+  378* 
+  379  sudo apt intstall docker.io
+  380  sudo apt-get intstall docker.io
+  381  sudo apt-get install     apt-transport-https     ca-certificates     curl     gnupg     lsb-release
+  382  sudo apt-get remove docker docker-engine docker.io containerd runc
+  383  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  384  echo   "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable nightly" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  385  sudo apt-get update
+  386  sudo apt-get install docker-ce docker-ce-cli containerd.io
+  387  sudo docker run hello-world
+  388  docker
+  389  sudo docker pull arm32v7/ros
+  390  ls
+  391  ls -al
+  392  pwd
+  393  printenv | grep ROS
+  394  pwd
+  395  history > install-docker.txt

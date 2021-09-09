@@ -1,0 +1,65 @@
+    1  ls
+    2  sudo apt update
+    3  sudo apt upgrade
+    4  sudo reboot
+    
+	5  sudo apt-get update
+    6  sudo apt-get install --reinstall build-essential
+
+   14  vi test.cpp
+   15  gcc test.cpp -lstdc++
+   17  ./a.out 
+
+	18 mkdir pkg
+    19  cd pkg/
+
+	install/build cmake
+   $sudo apt-get install cmake (3.13)
+    #build latest version(fast-dnn need the at least 3.17 to build)
+	#download cmake-3.21.1-linux-aarch64.tar.gz from
+	#https://cmake.org/download/
+	#and ungz it into
+	~/pkg/cmake-3.21.1
+	$cd ~/pkg/cmake-3.21.1
+	$mkdir buid
+	$cmake ..
+	$make      
+	$make install
+  
+   #build opencv
+   25  sudo apt-get install git
+   26  git clone --branch 4.1.0 https://github.com/opencv/opencv.git
+   27  git clone --branch 4.1.0 https://github.com/opencv/opencv_contrib.git
+
+   48  sudo apt-get install libeigen3-dev
+   49  sudo apt-get install libjpeg-dev
+   50  sudo apt-get install libpng-dev
+       sudo apt-get install libboost-all-dev
+   52  sudo apt-get install libv4l-dev
+   53  sudo apt-get install libtiff5-dev
+   54  sudo apt-get install zliblg-dev
+   55  sudo apt-get install zlib1g-dev
+   56  sudo apt-get install libswscale-dev
+   57  sudo apt-get install libavcode-dev
+   58  sudo apt-get install libavcodec-dev
+   59  sudo apt-get install -y libavformat-dev libavutil-dev
+   60  sudo apt-get install -y libglew-dev
+   61  sudo apt-get install -y libgtk2.0-dev libgtk-3-dev pkg-config
+   
+   62  cmake -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DWITH_LIBV4L=ON -DWITH_V4L=ON -DCMAKE_INSTALL_PREFIX=/opt/kmt -DCPACK_BINARY_DEB=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=~/pkg/opencv_contrib/modules ../
+   63  make -j4
+   #important you will have building errors during if directly go to 63.
+   #going back to build folder, do the following
+   $chmod +777 download_with_*.sh
+   #then going back to step 62
+   
+   64  make install
+   
+   
+   #build fast-dnn
+   $cd fast-dnn
+   $mkdir build
+   $cmake .. -DCMAKE_PREFIX_PATH=/opt/kmt -DENABLE_OPENCV_CUDA=OFF -DENABLE_TENSORFLOW=OFF -DENABLE_TENSORFLOW_LITE=OFF
+   $make -j4
+   $make install
+
