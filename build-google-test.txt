@@ -1,0 +1,18 @@
+
+-Windows
+1. colon 
+C:\Projects\2021\IrVo\pkg>git clone https://github.com/google/googletest.git
+
+2. run cmake to generate solution and project files
+
+C:\Projects\2021\IrVo\pkg\gooletest>mkdir vs2019
+C:\Projects\2021\IrVo\pkg\gooletest\vs2019> "C:\Program Files\CMake\bin\cmake" .. -DBUILD_GMOCK=OFF -DCMAKE_INSTALL_PREFIX=C:\Projects\2021\IrVo\pkg\googletest\vs2019\install
+
+3. Using vs2019 open the solution file and build it.
+
+-linux
+~/pkg$git clone https://github.com/google/googletest.git
+~/pkg/gooletest$sudo mkdir build
+~/pkg/gooletest/build$cmake .. -DBUILD_GMOCK=OFF -DCMAKE_INSTALL_PREFIX=~/pkg/gooletest/install
+~/pkg/gooletest/build/make 
+
