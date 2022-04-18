@@ -1,0 +1,35 @@
+sudo mount -v -t cifs //192.168.1.200/IrVo /media/winshare -o uid=debian,gid=debian,file_mode=0775,dir_mode=0775,credentials=/home/debian/.smbcredentials,vers=3.0
+
+1. win side: setting share folder
+   IrVo, and it can be windows file exploer reached by
+   \\192.168.1.200/IrVo
+
+2. linux side
+   a) install cifs
+   sudo apt-get install cifs-utils
+  
+   or (On older systems)
+	sudo apt-get install smbfs   
+
+3. edit /home/debian/.smbcredentials
+
+$cat /home/debian/.smbcredentials
+username=wus1
+password=xxxxx
+#note: no new line at the end of file!!!
+
+4. edit /etc/fstab (this will auto mount from boot)
+$cat /etc/fstab
+UUID=7495782d-0998-4d81-8dd2-5a044f99a0a6 / auto defaults 0 0
+//192.168.1.200/IrVo /media/winshare cifs uid=debian,gid=debian,file_mode=0775,dir_mode=0775,credentials=/home/debian/.smbcredentials,vers=3.0,noperm 0 0
+$
+
+5. debug (it works! verified!!!)
+$sudo mount -v -t cifs //192.168.1.200/IrVo /media/winshare -o uid=debian,gid=debian,file_mode=0775,dir_mode=0775,credentials=/home/debian/.smbcredentials,vers=3.0
+
+
+
+
+   
+ 
+   

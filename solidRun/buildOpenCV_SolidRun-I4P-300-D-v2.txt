@@ -58,7 +58,6 @@
    optimization4 ()
       cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_DEBUG_INFO=OFF -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/opt/kmt -DBUILD_SHARED_LIBS=OFF -DCV_DISABLE_OPTIMIZATION=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DWITH_LIBV4L=ON -DWITH_V4L=ON  -DCPACK_BINARY_DEB=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=~/pkg/opencv_contrib/modules ../
 
-   //noteL do not use j3 or j4, use -j1 'cause at te end it will stucked forever with jn (n>=2)
    63  make -j4
    #important you will have building errors during if directly go to 63.
    #going back to build folder, do the following

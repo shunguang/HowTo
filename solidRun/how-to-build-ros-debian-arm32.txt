@@ -3,6 +3,41 @@
 #1. Installing bootstrap dependencies
 sudo apt-get install python-rosdep python-rosinstall-generator python-vcstool python-rosinstall build-essential
 
+or
+sudo apt-get install python-rosdep2 python-rosinstall-generator python-vcstool python-rosinstall build-essential
+
+# ---- if you have error to install python-vcstool or pythons-vcstool--read the following  -----------
+# from https://github.com/dirk-thomas/vcstool
+ What is vcstool?
+Vcstool is a version control system (VCS) tool, designed to make working with multiple repositories easier.
+
+This tool should not be confused with vcstools (with a trailing s) which provides a Python API for interacting with different 
+version control systems. The biggest differences between the two are:
+
+vcstool does not use any state beside the repository working copies available in the filesystem.
+The file format of vcstool export uses the relative paths of the repositories as keys in YAML which avoids collisions by design.
+vcstool has significantly fewer lines of code than vcstools including the command line tools built on top.
+
+How to install vcstool?
+On Debian-based platforms the recommended method is to install the package python3-vcstool. On Ubuntu this is done using apt-get:
+
+If you are using ROS you can get the package directly from the ROS repository:
+
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt install curl # if you haven't already installed curl
+curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install python3-vcstool
+
+If you are not using ROS or if you want the latest release as soon as possible you can get the package from packagecloud.io :
+
+curl -s https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh | sudo bash
+sudo apt-get update
+sudo apt-get install python3-vcstool
+On other systems, use the PyPI package:
+sudo pip install vcstool
+# ----------eof about python-vcstool or pythons-vcstool -------------------
+
 #ROSDISTRO=noetic
 ROSDISTRO=melodic
 WS_PATH=~/pkg/ros_catkin_ws_$ROSDISTRO

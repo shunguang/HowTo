@@ -4,7 +4,8 @@
     4  sudo reboot
     
 	5  sudo apt-get update
-    6  sudo apt-get install --reinstall build-essential
+    6  
+	
 
    14  vi test.cpp
    15  gcc test.cpp -lstdc++
@@ -37,16 +38,18 @@
        sudo apt-get install libboost-all-dev
    52  sudo apt-get install libv4l-dev
    53  sudo apt-get install libtiff5-dev
-   54  sudo apt-get install zliblg-dev
-   55  sudo apt-get install zlib1g-dev
+   54  sudo apt-get install zlib1g-dev
    56  sudo apt-get install libswscale-dev
-   57  sudo apt-get install libavcode-dev
    58  sudo apt-get install libavcodec-dev
    59  sudo apt-get install -y libavformat-dev libavutil-dev
    60  sudo apt-get install -y libglew-dev
    61  sudo apt-get install -y libgtk2.0-dev libgtk-3-dev pkg-config
    
+   sudo apt-get install libeigen3-dev libjpeg-dev libpng-dev libboost-all-dev libv4l-dev libtiff5-dev zlib1g-dev libswscale-dev libavcodec-dev libavformat-dev libavutil-dev libglew-dev libgtk2.0-dev libgtk-3-dev pkg-config
+   
    62  cmake -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DWITH_LIBV4L=ON -DWITH_V4L=ON -DCMAKE_INSTALL_PREFIX=/opt/kmt -DCPACK_BINARY_DEB=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=~/pkg/opencv_contrib/modules ../
+   
+   62  cmake -DCMAKE_BUILD_TYPE=RELEASE -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DWITH_GSTREAMER=ON -DWITH_LIBV4L=ON -DWITH_V4L=ON -DCMAKE_INSTALL_PREFIX=/opt/kmt -DCPACK_BINARY_DEB=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=~/pkg/opencv_contrib/modules ../
    63  make -j4
    #important you will have building errors during if directly go to 63.
    #going back to build folder, do the following
