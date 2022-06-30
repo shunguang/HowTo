@@ -1,0 +1,387 @@
+Introduction 
+
+I cannot open these /dev/ttyS0  to /dev/ttyS3 serial ports, then go into debug process. Based on this link
+
+https://unix.stackexchange.com/questions/125183/how-to-find-which-serial-port-is-in-use
+https://unix.stackexchange.com/questions/22545/how-to-connect-to-a-serial-port-as-simple-as-using-ssh
+
+I verified that there is no connection on serial ports:  /dev/ttyS0, /dev/ttyS1, /dev/ttyS2, /dev/ttyS3. 
+Here are some output from my console window. Any thoughts?
+
+------------------------------------------------------------------------------------------------------
+
+0) Using tio
+ http://tio.github.io
+"tio" is a simple TTY terminal application which features a straightforward commandline interface to easily connect to TTY devices for basic input/output.
+Typical use is without options. For example:
+tio /dev/ttyS0
+
+Which corresponds to the commonly used options:
+tio --baudrate 115200 --databits 8 --flow none --stopbits 1 --parity none /dev/ttyS0
+It comes with full shell auto completion support for all options.
+
+debian@sr-imx8:/dev$ tio /dev/ttyS0
+[tio 15:08:32] tio v1.32
+[tio 15:08:32] Press ctrl-t q to quit
+Error: Not a tty device
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$ tio /dev/ttyS1
+[tio 15:08:42] tio v1.32
+[tio 15:08:42] Press ctrl-t q to quit
+Error: Not a tty device
+debian@sr-imx8:/dev$ tio /dev/ttyS2
+[tio 15:08:44] tio v1.32
+[tio 15:08:44] Press ctrl-t q to quit
+Error: Not a tty device
+debian@sr-imx8:/dev$ tio /dev/ttyS3
+[tio 15:08:46] tio v1.32
+[tio 15:08:46] Press ctrl-t q to quit
+Error: Not a tty device
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$ tio /dev/ttyACM0
+[tio 15:08:56] tio v1.32
+[tio 15:08:56] Press ctrl-t q to quit
+[tio 15:08:56] Connected
+
+1)	Find Console
+debian@sr-imx8:/dev$ tty
+/dev/ttymxc1                                                this is our console, can be verified
+
+
+2)	Using setserial
+debian@sr-imx8:/dev$ setserial -g -G /dev/ttyS* | sort -V
+/dev/ttyS0 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+/dev/ttyS1 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+/dev/ttyS2 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+/dev/ttyS3 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$ setserial -g -G /dev/ttyUSB* | sort –V                                                        -------- no USB dev
+/dev/ttyUSB*: No such file or directory
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$ setserial -g -G /dev/ttyACM* | sort -V
+/dev/ttyACM0 uart unknown port 0x0000 irq 0 baud_base 9600 spd_normal                            ------  this is our camera
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$ setserial -g -G /dev/ttym* | sort -V
+/dev/ttymxc1 uart undefined port 0x0000 irq 31 baud_base 1500000 spd_normal                     ------  this is our cpnsole
+
+3)	Using dmesg
+
+debian@sr-imx8:/dev$ dmesg | grep tty
+[    0.000000] Kernel command line: console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200 log_level=7 net.ifnames=0
+[    1.230228] 30860000.serial: ttymxc0 at MMIO 0x30860000 (irq = 30, base_baud = 5000000) is a IMX
+[    1.238525] serial serial0: tty port ttymxc0 registered
+[    1.243863] 30890000.serial: ttymxc1 at MMIO 0x30890000 (irq = 31, base_baud = 1500000) is a IMX
+[    1.252525] printk: console [ttymxc1] enabled
+[    4.260663] systemd[1]: Created slice system-getty.slice.                                                              ----- console
+[    5.653583] cdc_acm 1-1:1.2: ttyACM0: USB ACM device                                                              ------  this is our camera
+
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$ dmesg | grep ttyS
+nothing output at here, does that mean there is no 
+ 
+4)	List of /dev/
+
+debian@sr-imx8:/dev$ ls -al
+drwxr-xr-x 17 root   root        4140 Feb 14 10:12 .
+drwxr-xr-x 19 root   root        4096 Feb 14 10:12 ..
+crw-r--r--  1 root   root     10, 235 Feb 14 10:11 autofs
+drwxr-xr-x  2 root   root         300 Jan  1  1970 block
+crw-------  1 root   root     10, 234 Feb 14 10:11 btrfs-control
+drwxr-xr-x  3 root   root          60 Jan  1  1970 bus
+crw-------  1 root   root     10,  61 Feb 14 10:11 caam-keygen
+drwxr-xr-x  2 root   root        3500 Feb 14 10:12 char
+crw-------  1 root   root      5,   1 Feb 14 10:13 console
+crw-------  1 root   root     10,  59 Feb 14 10:11 cpu_dma_latency
+crw-------  1 root   root     10, 203 Feb 14 10:11 cuse
+drwxr-xr-x  6 root   root         120 Jan  1  1970 disk
+drwxr-xr-x  3 root   root          80 Feb 14 10:11 dri
+lrwxrwxrwx  1 root   root          13 Jan  1  1970 fd -> /proc/self/fd
+crw-------  1 root   root     10,  60 Feb 14 10:11 fsl-usdpaa-irq
+crw-rw-rw-  1 root   root      1,   7 Feb 14 10:11 full
+crw-rw-rw-  1 root   root     10, 229 Feb 14 10:11 fuse
+crw-rw----  1 root   video   199,   0 Feb 14 10:11 galcore
+crw-------  1 root   root    254,   0 Feb 14 10:11 gpiochip0
+crw-------  1 root   root    254,   1 Feb 14 10:11 gpiochip1
+crw-------  1 root   root    254,   2 Feb 14 10:11 gpiochip2
+crw-------  1 root   root    254,   3 Feb 14 10:11 gpiochip3
+crw-------  1 root   root    254,   4 Feb 14 10:11 gpiochip4
+drwxr-xr-x  2 root   root           0 Feb 14 10:11 hugepages
+crw-------  1 root   root     10, 183 Feb 14 10:11 hwrng
+crw-rw----  1 root   i2c      89,   0 Feb 14 10:11 i2c-0
+crw-rw----  1 root   i2c      89,   1 Feb 14 10:11 i2c-1
+crw-rw----  1 root   i2c      89,   2 Feb 14 10:11 i2c-2
+lrwxrwxrwx  1 root   root          12 Feb 14 10:11 initctl -> /run/initctl
+crw-rw----  1 root   video    10,  62 Feb 14 10:11 ion
+crw-r--r--  1 root   root      1,  11 Feb 14 10:11 kmsg
+crw-rw----  1 root   kvm      10, 232 Feb 14 10:11 kvm
+lrwxrwxrwx  1 root   root          28 Feb 14 10:11 log -> /run/systemd/journal/dev-log
+crw-rw----  1 root   disk     10, 237 Feb 14 10:11 loop-control
+brw-rw----  1 root   disk      7,   0 Feb 14 10:11 loop0
+brw-rw----  1 root   disk      7,   1 Feb 14 10:11 loop1
+brw-rw----  1 root   disk      7,   2 Feb 14 10:11 loop2
+brw-rw----  1 root   disk      7,   3 Feb 14 10:11 loop3
+brw-rw----  1 root   disk      7,   4 Feb 14 10:11 loop4
+brw-rw----  1 root   disk      7,   5 Feb 14 10:11 loop5
+brw-rw----  1 root   disk      7,   6 Feb 14 10:11 loop6
+brw-rw----  1 root   disk      7,   7 Feb 14 10:11 loop7
+drwxr-xr-x  2 root   root          60 Feb 14 10:11 mapper
+crw-rw----  1 root   video   250,   0 Feb 14 10:12 media0
+crw-r-----  1 root   kmem      1,   1 Feb 14 10:11 mem
+brw-rw----  1 root   disk    179,  96 Feb 14 10:11 mmcblk1
+brw-rw----  1 root   disk    179,  97 Feb 14 10:11 mmcblk1p1
+brw-rw----  1 root   disk    179,   0 Feb 14 10:11 mmcblk2
+brw-rw----  1 root   disk    179,  32 Feb 14 10:11 mmcblk2boot0
+brw-rw----  1 root   disk    179,  64 Feb 14 10:11 mmcblk2boot1
+crw-------  1 root   root    509,   0 Feb 14 10:11 mmcblk2rpmb
+drwxrwxrwt  2 root   root          40 Jan  1  1970 mqueue
+crw-rw----  1 root   video   508,   0 Feb 14 10:11 mxc_hantro
+crw-------  1 root   root    507,   0 Feb 14 10:11 mxc_hantro_h1
+drwxr-xr-x  2 root   root          60 Jan  1  1970 net
+crw-rw-rw-  1 root   root      1,   3 Feb 14 10:11 null
+crw-r-----  1 root   kmem      1,   4 Feb 14 10:11 port
+crw-------  1 root   root    108,   0 Feb 14 10:11 ppp
+crw-------  1 root   root    248,   0 Feb 14 10:11 pps0
+crw-rw-rw-  1 root   tty       5,   2 Feb 14 13:25 ptmx
+crw-------  1 root   root    247,   0 Feb 14 10:11 ptp0
+drwxr-xr-x  2 root   root           0 Jan  1  1970 pts
+crw-------  1 root   root      2,   0 Feb 14 10:11 ptyp0
+crw-------  1 root   root      2,   1 Feb 14 10:11 ptyp1
+crw-------  1 root   root      2,   2 Feb 14 10:11 ptyp2
+crw-------  1 root   root      2,   3 Feb 14 10:11 ptyp3
+crw-------  1 root   root      2,   4 Feb 14 10:11 ptyp4
+crw-------  1 root   root      2,   5 Feb 14 10:11 ptyp5
+crw-------  1 root   root      2,   6 Feb 14 10:11 ptyp6
+crw-------  1 root   root      2,   7 Feb 14 10:11 ptyp7
+crw-------  1 root   root      2,   8 Feb 14 10:11 ptyp8
+crw-------  1 root   root      2,   9 Feb 14 10:11 ptyp9
+crw-------  1 root   root      2,  10 Feb 14 10:11 ptypa
+crw-------  1 root   root      2,  11 Feb 14 10:11 ptypb
+crw-------  1 root   root      2,  12 Feb 14 10:11 ptypc
+crw-------  1 root   root      2,  13 Feb 14 10:11 ptypd
+crw-------  1 root   root      2,  14 Feb 14 10:11 ptype
+crw-------  1 root   root      2,  15 Feb 14 10:11 ptypf
+crw-rw-rw-  1 root   root      1,   8 Feb 14 10:11 random
+crw-rw-r--  1 root   netdev   10, 242 Feb 14 10:11 rfkill
+lrwxrwxrwx  1 root   root           4 Feb 14 10:11 rtc -> rtc0
+crw-------  1 root   root    251,   0 Feb 14 10:11 rtc0
+drwxr-xr-x  4 root   root          80 Feb 14 10:12 serial
+drwxrwxrwt  2 root   root          40 Feb 14 10:11 shm
+drwxr-xr-x  2 root   root          60 Jan  1  1970 snd
+lrwxrwxrwx  1 root   root          15 Jan  1  1970 stderr -> /proc/self/fd/2
+lrwxrwxrwx  1 root   root          15 Jan  1  1970 stdin -> /proc/self/fd/0
+lrwxrwxrwx  1 root   root          15 Jan  1  1970 stdout -> /proc/self/fd/1
+crw-rw-rw-  1 root   tty       5,   0 Feb 14 13:41 tty
+crw--w----  1 root   tty       4,   0 Feb 14 10:11 tty0
+crw--w----  1 root   tty       4,   1 Feb 14 10:13 tty1
+crw--w----  1 root   tty       4,  10 Feb 14 10:11 tty10
+crw--w----  1 root   tty       4,  11 Feb 14 10:11 tty11
+crw--w----  1 root   tty       4,  12 Feb 14 10:11 tty12
+crw--w----  1 root   tty       4,  13 Feb 14 10:11 tty13
+crw--w----  1 root   tty       4,  14 Feb 14 10:11 tty14
+crw--w----  1 root   tty       4,  15 Feb 14 10:11 tty15
+crw--w----  1 root   tty       4,  16 Feb 14 10:11 tty16
+crw--w----  1 root   tty       4,  17 Feb 14 10:11 tty17
+crw--w----  1 root   tty       4,  18 Feb 14 10:11 tty18
+crw--w----  1 root   tty       4,  19 Feb 14 10:11 tty19
+crw--w----  1 root   tty       4,   2 Feb 14 10:11 tty2
+crw--w----  1 root   tty       4,  20 Feb 14 10:11 tty20
+crw--w----  1 root   tty       4,  21 Feb 14 10:11 tty21
+crw--w----  1 root   tty       4,  22 Feb 14 10:11 tty22
+crw--w----  1 root   tty       4,  23 Feb 14 10:11 tty23
+crw--w----  1 root   tty       4,  24 Feb 14 10:11 tty24
+crw--w----  1 root   tty       4,  25 Feb 14 10:11 tty25
+crw--w----  1 root   tty       4,  26 Feb 14 10:11 tty26
+crw--w----  1 root   tty       4,  27 Feb 14 10:11 tty27
+crw--w----  1 root   tty       4,  28 Feb 14 10:11 tty28
+crw--w----  1 root   tty       4,  29 Feb 14 10:11 tty29
+crw--w----  1 root   tty       4,   3 Feb 14 10:11 tty3
+crw--w----  1 root   tty       4,  30 Feb 14 10:11 tty30
+crw--w----  1 root   tty       4,  31 Feb 14 10:11 tty31
+crw--w----  1 root   tty       4,  32 Feb 14 10:11 tty32
+crw--w----  1 root   tty       4,  33 Feb 14 10:11 tty33
+crw--w----  1 root   tty       4,  34 Feb 14 10:11 tty34
+crw--w----  1 root   tty       4,  35 Feb 14 10:11 tty35
+crw--w----  1 root   tty       4,  36 Feb 14 10:11 tty36
+crw--w----  1 root   tty       4,  37 Feb 14 10:11 tty37
+crw--w----  1 root   tty       4,  38 Feb 14 10:11 tty38
+crw--w----  1 root   tty       4,  39 Feb 14 10:11 tty39
+crw--w----  1 root   tty       4,   4 Feb 14 10:11 tty4
+crw--w----  1 root   tty       4,  40 Feb 14 10:11 tty40
+crw--w----  1 root   tty       4,  41 Feb 14 10:11 tty41
+crw--w----  1 root   tty       4,  42 Feb 14 10:11 tty42
+crw--w----  1 root   tty       4,  43 Feb 14 10:11 tty43
+crw--w----  1 root   tty       4,  44 Feb 14 10:11 tty44
+crw--w----  1 root   tty       4,  45 Feb 14 10:11 tty45
+crw--w----  1 root   tty       4,  46 Feb 14 10:11 tty46
+crw--w----  1 root   tty       4,  47 Feb 14 10:11 tty47
+crw--w----  1 root   tty       4,  48 Feb 14 10:11 tty48
+crw--w----  1 root   tty       4,  49 Feb 14 10:11 tty49
+crw--w----  1 root   tty       4,   5 Feb 14 10:11 tty5
+crw--w----  1 root   tty       4,  50 Feb 14 10:11 tty50
+crw--w----  1 root   tty       4,  51 Feb 14 10:11 tty51
+crw--w----  1 root   tty       4,  52 Feb 14 10:11 tty52
+crw--w----  1 root   tty       4,  53 Feb 14 10:11 tty53
+crw--w----  1 root   tty       4,  54 Feb 14 10:11 tty54
+crw--w----  1 root   tty       4,  55 Feb 14 10:11 tty55
+crw--w----  1 root   tty       4,  56 Feb 14 10:11 tty56
+crw--w----  1 root   tty       4,  57 Feb 14 10:11 tty57
+crw--w----  1 root   tty       4,  58 Feb 14 10:11 tty58
+crw--w----  1 root   tty       4,  59 Feb 14 10:11 tty59
+crw--w----  1 root   tty       4,   6 Feb 14 10:11 tty6
+crw--w----  1 root   tty       4,  60 Feb 14 10:11 tty60
+crw--w----  1 root   tty       4,  61 Feb 14 10:11 tty61
+crw--w----  1 root   tty       4,  62 Feb 14 10:11 tty62
+crw--w----  1 root   tty       4,  63 Feb 14 10:11 tty63
+crw--w----  1 root   tty       4,   7 Feb 14 10:11 tty7
+crw--w----  1 root   tty       4,   8 Feb 14 10:11 tty8
+crw--w----  1 root   tty       4,   9 Feb 14 10:11 tty9
+crwxrwxrwx  1 root   dialout 166,   0 Feb 14 10:12 ttyACM0
+crwxrwxrwx  1 root   dialout   4,  64 Feb 14 10:11 ttyS0
+crwxrwxrwx  1 root   dialout   4,  65 Feb 14 10:11 ttyS1
+crwxrwxrwx  1 root   dialout   4,  66 Feb 14 10:11 ttyS2
+crwxrwxrwx  1 root   dialout   4,  67 Feb 14 10:11 ttyS3
+crw-------  1 debian tty     207,  17 Feb 14 13:54 ttymxc1
+crw-------  1 root   root      3,   0 Feb 14 10:11 ttyp0
+crw-------  1 root   root      3,   1 Feb 14 10:11 ttyp1
+crw-------  1 root   root      3,   2 Feb 14 10:11 ttyp2
+crw-------  1 root   root      3,   3 Feb 14 10:11 ttyp3
+crw-------  1 root   root      3,   4 Feb 14 10:11 ttyp4
+crw-------  1 root   root      3,   5 Feb 14 10:11 ttyp5
+crw-------  1 root   root      3,   6 Feb 14 10:11 ttyp6
+crw-------  1 root   root      3,   7 Feb 14 10:11 ttyp7
+crw-------  1 root   root      3,   8 Feb 14 10:11 ttyp8
+crw-------  1 root   root      3,   9 Feb 14 10:11 ttyp9
+crw-------  1 root   root      3,  10 Feb 14 10:11 ttypa
+crw-------  1 root   root      3,  11 Feb 14 10:11 ttypb
+crw-------  1 root   root      3,  12 Feb 14 10:11 ttypc
+crw-------  1 root   root      3,  13 Feb 14 10:11 ttypd
+crw-------  1 root   root      3,  14 Feb 14 10:11 ttype
+crw-------  1 root   root      3,  15 Feb 14 10:11 ttypf
+crw-------  1 root   root     10,  58 Feb 14 10:11 ubi_ctrl
+crw-rw-rw-  1 root   root      1,   9 Feb 14 10:11 urandom
+drwxr-xr-x  4 root   root          80 Feb 14 10:12 v4l
+crw-rw----  1 root   tty       7,   0 Feb 14 10:11 vcs
+crw-rw----  1 root   tty       7,   1 Feb 14 10:11 vcs1
+crw-rw----  1 root   tty       7,   2 Feb 14 10:11 vcs2
+crw-rw----  1 root   tty       7,   3 Feb 14 10:11 vcs3
+crw-rw----  1 root   tty       7,   4 Feb 14 10:11 vcs4
+crw-rw----  1 root   tty       7,   5 Feb 14 10:11 vcs5
+crw-rw----  1 root   tty       7,   6 Feb 14 10:11 vcs6
+crw-rw----  1 root   tty       7, 128 Feb 14 10:11 vcsa
+crw-rw----  1 root   tty       7, 129 Feb 14 10:11 vcsa1
+crw-rw----  1 root   tty       7, 130 Feb 14 10:11 vcsa2
+crw-rw----  1 root   tty       7, 131 Feb 14 10:11 vcsa3
+crw-rw----  1 root   tty       7, 132 Feb 14 10:11 vcsa4
+crw-rw----  1 root   tty       7, 133 Feb 14 10:11 vcsa5
+crw-rw----  1 root   tty       7, 134 Feb 14 10:11 vcsa6
+crw-rw----  1 root   tty       7,  64 Feb 14 10:11 vcsu
+crw-rw----  1 root   tty       7,  65 Feb 14 10:11 vcsu1
+crw-rw----  1 root   tty       7,  66 Feb 14 10:11 vcsu2
+crw-rw----  1 root   tty       7,  67 Feb 14 10:11 vcsu3
+crw-rw----  1 root   tty       7,  68 Feb 14 10:11 vcsu4
+crw-rw----  1 root   tty       7,  69 Feb 14 10:11 vcsu5
+crw-rw----  1 root   tty       7,  70 Feb 14 10:11 vcsu6
+drwxr-xr-x  2 root   root          60 Jan  1  1970 vfio
+crw-------  1 root   root     10,  63 Feb 14 10:11 vga_arbiter
+crw-------  1 root   root     10, 137 Feb 14 10:11 vhci
+crw-rw----  1 root   video    81,   0 Feb 14 10:12 video0
+crw-rw----  1 root   video    81,   1 Feb 14 10:12 video1
+crw-------  1 root   root     10, 130 Feb 14 10:11 watchdog
+crw-------  1 root   root    244,   0 Feb 14 10:11 watchdog0
+crw-rw-rw-  1 root   root      1,   5 Feb 14 10:11 zero
+
+
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$
+debian@sr-imx8:/dev$ sudo setserial -g -G /dev/tty* | sort -V
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+Cannot get serial info: Inappropriate ioctl for device
+/dev/ttyp0: Input/output error
+/dev/ttyp1: Input/output error
+/dev/ttyp2: Input/output error
+/dev/ttyp3: Input/output error
+/dev/ttyp4: Input/output error
+/dev/ttyp5: Input/output error
+/dev/ttyp6: Input/output error
+/dev/ttyp7: Input/output error
+/dev/ttyp8: Input/output error
+/dev/ttyp9: Input/output error
+/dev/ttypa: Input/output error
+/dev/ttypb: Input/output error
+/dev/ttypc: Input/output error
+/dev/ttypd: Input/output error
+/dev/ttype: Input/output error
+/dev/ttypf: Input/output error
+/dev/ttyACM0 uart unknown port 0x0000 irq 0 baud_base 9600 spd_normal
+/dev/ttyS0 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+/dev/ttyS1 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+/dev/ttyS2 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+/dev/ttyS3 uart unknown port 0x0000 irq 0 baud_base 0 spd_normal
+/dev/ttymxc1 uart undefined port 0x0000 irq 31 baud_base 1500000 spd_normal
+/dev/tty uart undefined port 0x0000 irq 31 baud_base 1500000 spd_normal
