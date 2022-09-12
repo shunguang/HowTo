@@ -1,0 +1,199 @@
+How to Set IMX8 ALL In One Doc
+--------------------------------
+	By Shunguang Wu
+	(06/17/2022)
+---------------------------------
+1. make SD card
+   (see doc in folder: make-sd-card/)
+
+2. set ip and connect with internet
+   edit /etc/network/interfaces
+   (see template: interfaces.txt)
+
+3. connect your machine with DMZ netwrok though ethernet cable
+   a) debian@sr-imx8:~$ ping www.yahoo.com
+   b) debian@sr-imx8:~$ sudo apt install inetutils-ping
+   c) add
+      PATH=/usr/sbin:/sbin:$PATH
+      in the last line of ~/.bashrc
+      then
+	  debian@sr-imx8:~$ source ~/.bashrc
+	  debian@sr-imx8:~$ ifconfig
+	  
+4. download and install more tools
+    sudo apt install ca-certificates
+	sudo date --set="17 Jun 2022 05:57:51 PM UTC"
+    a)  sudo apt update
+---------will have some errors, but ok, move on ----------
+	debian@sr-imx8:~$ sudo apt-get update
+[sudo] password for debian:
+Hit:1 http://deb.debian.org/debian buster InRelease
+Hit:2 http://deb.debian.org/debian buster-updates InRelease
+Hit:3 http://security.debian.org/debian-security buster/updates InRelease
+Get:4 https://repo.solid-build.xyz/debian/buster/bsp-any  InRelease [1514 B]
+Hit:5 https://repo.solid-build.xyz/debian/buster/bsp-imx8v2  InRelease
+Err:4 https://repo.solid-build.xyz/debian/buster/bsp-any  InRelease
+  The following signatures were invalid: EXPKEYSIG 652CD31D2C8DF3D0 BSP:Generic OBS Project <BSP:Generic@mxobs>
+Reading package lists... Done
+W: An error occurred during the signature verification. The repository is not updated and the previous index files will be used. GPG error: https://repo.sol                                      id-build.xyz/debian/buster/bsp-any  InRelease: The following signatures were invalid: EXPKEYSIG 652CD31D2C8DF3D0 BSP:Generic OBS Project <BSP:Generic@mxobs>
+W: Failed to fetch https://repo.solid-build.xyz/debian/buster/bsp-any/InRelease  The following signatures were invalid: EXPKEYSIG 652CD31D2C8DF3D0 BSP:Gener                                      ic OBS Project <BSP:Generic@mxobs>
+W: Some index files failed to download. They have been ignored, or old ones used instead.
+----------------------------------------------------------
+	
+    b)  sudo apt upgrade
+    c)  sudo reboot
+	
+	d)  sudo apt-get update
+	    sudo apt-get install gdb
+        sudo apt-get install --reinstall build-essential
+        -----------test gcc ----
+        nano test.cpp
+        gcc test.cpp -lstdc++
+		-----------------------
+		
+	e)	install/build cmake
+    $sudo apt-get install git
+    $sudo apt-get install cmake
+	$sudo apt-get install libssl-dev
+	
+	#this install is v3.13 
+    #build latest version(fast-dnn need the at least 3.17 to build)
+	#download cmake-3.21.1-linux-aarch64.tar.gz from
+	#https://cmake.org/download/
+	#and ungz it into
+	~/pkg$ git clone https://github.com/Kitware/CMake.git
+	~/pkg$ cd CMake
+	~/pkg/CMake$ mkdir buid
+	~/pkg/CMake$ cmake ..
+	~/pkg/CMake$ make      
+	~/pkg/CMake$ sudo make install
+	
+    edit ~/.bashrc by adding 
+	export CMAKE_ROOT=/usr/local/share/cmake-3.24
+	
+	then run	
+	$source ~/.bashrc
+
+  f)build opencv
+     sudo apt-get install git
+	 
+	copy  C:\Users\wus1\Projects\2021\pnt\imx8-101-pnt-clone\opencv\ 
+         /home/debian/pkg/opencv
+	copy  C:\Users\wus1\Projects\2021\pnt\imx8-101-pnt-clone\opencv_contrib\ 
+         /home/debian/pkg/opencv_contrib
+    
+	 #-----------------or ---------------------------------------------------------
+     ~/pkg$ git clone --branch 4.1.0 https://github.com/opencv/opencv.git
+     ~/pkg$ git clone --branch 4.1.0 https://github.com/opencv/opencv_contrib.git
+	 (this approach miss a few libs, do not use it)
+	 #-----------------------------------------------------------------------------
+     sudo apt-get install -y libeigen3-dev libjpeg-dev libpng-dev libboost-all-dev libv4l-dev libtiff5-dev zlib1g-dev libswscale-dev libavcodec-dev
+	 sudo apt-get install -y libavformat-dev libavutil-dev libglew-dev libgtk2.0-dev libgtk-3-dev pkg-config
+   
+   optimization1
+      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_DEBUG_INFO=OFF -DCMAKE_INSTALL_PREFIX=/opt/kmt -DBUILD_SHARED_LIBS=ON -DCV_DISABLE_OPTIMIZATION=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DWITH_LIBV4L=ON -DWITH_V4L=ON  -DCPACK_BINARY_DEB=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=~/pkg/opencv_contrib/modules ../
+   or
+   optimization4  ( we use this appoach at imx8)
+      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_DEBUG_INFO=OFF -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/opt/kmt -DBUILD_SHARED_LIBS=OFF -DCV_DISABLE_OPTIMIZATION=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_CUDA=OFF -DWITH_LIBV4L=ON -DWITH_V4L=ON  -DCPACK_BINARY_DEB=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=~/pkg/opencv_contrib/modules ../
+	  
+   $ make -j1
+   $ sudo make install
+
+5. Build Ceres (Boundle adjustment)
+
+# google-glog + gflags
+sudo apt-get install libgoogle-glog-dev libgflags-dev
+# BLAS & LAPACK
+sudo apt-get install libatlas-base-dev
+# Eigen3
+sudo apt-get install libeigen3-dev
+# SuiteSparse and CXSparse (optional)
+sudo apt-get install libsuitesparse-dev
+
+We are now ready to clone and build, test, and install Ceres.
+  git clone https://github.com/ceres-solver/ceres-solver.git
+or 
+  tar zxf ceres-solver-2.0.0.tar.gz
+  
+$mkdir local_build
+$cd local_build
+$cmake ..
+$make -j4
+$make test
+
+# Optionally install Ceres, it can also be exported using CMake which
+# allows Ceres to be used without requiring installation, see the documentation
+# for the EXPORT_BUILD_DIR option for more information.
+$ make install
+
+5. Build Fdnn
+a) copy  C:\Users\wus1\Projects\2021\pnt\imx8-101-pnt-clone\sd_ws to 
+         /home/debian/pnt/.
+b) cd  /home/debian/pnt/sd_ws/src/fast-dnn/build
+c) run
+$cmake -DCMAKE_PREFIX_PATH=/opt/kmt -DCMAKE_INSTALL_PREFIX=/opt/sd_jhuapl/install -DENABLE_OPENCV_CUDA=OFF -DENABLE_TENSORFLOW=OFF -DENABLE_GSTREAMER=OFF -DENABLE_TESTS=OFF -DENABLE_REALSENSE=OFF -DENABLE_ARAVIS=OFF -DENABLE_GAZEBO=OFF -DENABLE_BASLERPYLON=OFF -DENABLE_ZED=OFF -DENABLE_I2C=OFF -DENABLE_TENSORRT=OFF ../
+# note
+# CMAKE_PREFIX_PATH: Path used for searching by FIND_XXX(), with appropriate suffixes added
+# CMAKE_INSTALL_PREFIX: Install directory used by install.
+        If "make install" is invoked or INSTALL is built, this directory is pre-pended onto all install directories. 
+		This variable defaults to /usr/local on UNIX and c:/Program Files on Windows.
+$make -j1 ( note -j4 frezzed)
+$make install
+
+6. Build 3rd party stuff
+a) copy  C:\Users\wus1\Projects\2021\pnt\imx8-101-pnt-clone\debianEnv\pkg
+   to
+   /home/debian/pnt/debianEnv/pkg
+  
+b) build vnproglib
+ 	 
+	$cd /home/debian/pnt/debianEnv/pkg/vnproglib/cpp/build
+	$rm -rf * 
+	$cmake ../
+	$make
+    $sudo cp liblibvncxx.a /opt/sd_jhuapl/install/lib/libvncxx.a
+	
+c) build BosonSDK
+   $cd   ~/pnt/debianEnv/pkg/BosonSDK_rev206/SDK_USER_PERMISSIONS/FSLP_Files
+   $make -f Makefile_fslp4arm.mak
+   $sudo cp ./libFslp.a /opt/sd_jhuapl/install/lib/.
+   
+   $cd   ~/pnt/debianEnv/pkg/BosonSDK_rev206/SDK_USER_PERMISSIONS/ClientFiles_C
+   $make -f Makefile_bosonSdk4arm.mak
+   $sudo cp ../build/libBosonSdk.a /opt/sd_jhuapl/install/lib/.
+
+d)Build NMEA
+   cd ~/pnt/debianEnv/pkg/nmealib-0.5.3/nmealib$ 
+   $make
+   
+   then
+   
+   ~/pnt/debianEnv/pkg/nmealib-0.5.3/nmealib/lib/libnmea.a 
+   
+   will be created
+   
+  7. Finally build pnt
+  
+  $cd ~/pnt/src/makeFiles
+  $chmod -R  +775 *.sh
+  $sed -i -e 's/\r$//' *.sh
+  $./run_all_Makefiles_w_cleanAll.sh
+  
+  the result will be
+  ~/pnt/build
+
+ 
+that's it, enjoy!
+-----------eof----------  
+  
+  
+
+   
+   
+   
+   
+   
+   
+
+	
+	
