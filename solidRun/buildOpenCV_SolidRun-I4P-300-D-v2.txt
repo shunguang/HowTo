@@ -14,7 +14,7 @@
     19  cd pkg/
 
 	install/build cmake
-   $sudo apt-get install cmake (3.13)
+    $sudo apt-get install cmake (3.13)
     #build latest version(fast-dnn need the at least 3.17 to build)
 	#download cmake-3.21.1-linux-aarch64.tar.gz from
 	#https://cmake.org/download/
@@ -25,7 +25,8 @@
 	$cmake ..
 	$make      
 	$make install
-  
+	
+	
    #build opencv
    25  sudo apt-get install git
    26  git clone --branch 4.1.0 https://github.com/opencv/opencv.git

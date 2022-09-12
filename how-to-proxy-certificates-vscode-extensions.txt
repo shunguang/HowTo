@@ -1,0 +1,33 @@
+how	to set Proxy Certificate, SSH key and VScode extensions
+
+1. XYZ Proxy Certificates
+
+Download these two certificates:
+•	https://xyx.abc/XYZ-MS-DOM1.crt
+•	https://xyz.abc/XYZ-MS-Root.crt
+
+2. Run the following commands as sudo to install the XYZ Proxy certificates:
+
+$apt-get update && apt-get install -y ca-certificates
+$cp XYZ-MS-Root.crt /usr/local/share/ca-certificates/
+$cp XYZ-MS-DOM1.crt /usr/local/share/ca-certificates/
+$cp XYZ-MS-Root-XX.crt /etc/ssl/certs/
+$cp XYZ-MS-DOM1-XX.crt /etc/ssl/certs/
+$update-ca-certificates
+
+3. GitLab SSH Key
+1).	To add an SSH key to GitLab to allow you to skip entering your username and password, you first need to generate an SSH key. You will need openssh installed to generate an ssh key. Follow these instructions to generate a key. RSA key of 2048-bits is ok. https://scruffy.XYZ.edu/help/user/ssh.md
+2).	In GitLab, add your SSH key to your profile: https://scruffy.XYZ.edu/-/profile/keys
+
+4. Active certificate in VS Code (to install extensions) (For Ubuntu 18.04 and 20.04)
+The following steps can be followed to insert the certificate into your NSSDB and were tested on an Ubuntu 18.04 system:
+A)	Install the package that provides the certutil utility:
+	1)	Redhat: nss-tools
+	2)	Ubuntu / Debian: libnss3-tools
+B)	Ensure the NSSDB directory is present:
+	1)	mkdir -p ${HOME}/.pki/nssdb
+C)	Run the following command to insert the certificate into your NSSDB:
+	1)	certutil -d sql:${HOME}/.pki/nssdb -A -t "C,," -n "XYZ CA Certificate" -i /path/to/XYZ-MS-Root-CA-05-21-2038.cer
+D)	Close the Visual Studio Code application
+E)	Restart the Visual Studio Code application
+------------------------------------------------
