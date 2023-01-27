@@ -1,0 +1,59 @@
+
+ref: https://github.com/jocover/jetson-ffmpeg
+
+1.Build and install jetson-ffmpeg library
+
+git clone https://github.com/jocover/jetson-ffmpeg.git
+cd jetson-ffmpeg
+
+------ not mentioned in jocover's readme ----------
+edit nvmpi.pc.in
+in the Requires: section 
+
+replace the old line
+Libs:-L${libdir} -lnvmpi
+by
+Libs:-L${libdir} -lnvmpi -L/usr/lib/aarch64-linux-gnu/tegra -lnvbufsurface
+
+it looks like
+xyz/jetson-ffmpeg$ cat nvmpi.pc.in
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: @PROJECT_NAME@
+Description: @PROJECT_DESCRIPTION@
+Version: @PROJECT_VERSION@
+
+Requires:
+# Libs:-L${libdir} -lnvmpi
+Libs:-L${libdir} -lnvmpi -L/usr/lib/aarch64-linux-gnu/tegra -lnvbufsurface
+Cflags: -I${includedir} 
+--------------------------------------------------
+
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+sudo ldconfig
+
+
+2. Patch ffmpeg and build
+
+git clone git://source.ffmpeg.org/ffmpeg.git -b release/4.2 --depth=1
+cd ffmpeg
+wget https://github.com/jocover/jetson-ffmpeg/raw/master/ffmpeg_nvmpi.patch
+git apply ffmpeg_nvmpi.patch
+
+
+3. Run configure (to enable nvmpi, libx264,libx265)
+
+$./configure --enable-static --enable-shared --enable-nonfree --enable-libnpp --enable-nvmpi --enable-gpl --disable-opencl --extra-cflags="-I/usr/local/cuda-11.4/include -I/usr/local/include" --extra-ldflags="-L/usr/local/cuda-11.4/lib64 -L/usr/local/lib -L/usr/lib/aarch64-linux-gnu" --enable-libx264 --enable-libx265 --extra-libs="-ldl -lm -lstdc++ -lpthread -lnuma" --prefix=/usr/local
+
+4. Run make
+
+$make -j6
+$sudo make install
+
