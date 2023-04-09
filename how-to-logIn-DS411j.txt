@@ -1,0 +1,31 @@
+how to login DS411j
+(4/9/2023)
+
+	
+1. reset DS411j
+	a)Hook up DS411j on the LAN via ethenet cable
+	b)power on
+	c)on DS411j, push reset button utill hear beep
+
+2. login route settings in you LAN
+http://192.168.1.1/
+usr: admin (or see the label on route)
+pw:  (see label on route)
+
+3. find the DS411j's ip by viewing the attached wired device
+(example: 192.168.1.26)
+
+4. http://192.168.1.26/
+usr: admin
+pw: (blank, do not input anything)
+(after that you will see the file system buttons)
+--------eof------------
+
+
+
+
+  
+
+
+
+
