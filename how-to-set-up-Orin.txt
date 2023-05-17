@@ -1,0 +1,49 @@
+1 Build freeImage
+
+a) modify ./Source/LibPNG/pngpriv.h by adding the following at Line 138
+   (force PNG_ARM_NEON_OPT is 0)
+#ifdef PNG_ARM_NEON_OPT
+#undef PNG_ARM_NEON_OPT
+#endif
+#define PNG_ARM_NEON_OPT 0
+
+b) run the following cmds
+make
+make clean
+sudo make install
+
+
+2. build CMake 3.26.3 (Vulkan requires higher version of cmake than insatlled by apt)
+
+a) download cmake3.26.3 from its web
+b) extract it into ~/pkg/cmake-3.26.3
+c) cd ~/pkg/cmake-3.26.3 & mkdir build & cd build
+d) ~/pkg/cmake-3.26.3/build$ ../bootstrap
+e) ~/pkg/cmake-3.26.3/build$ make -j8
+f) ~/pkg/cmake-3.26.3/build$ sudo make install
+
+3. build Vulkan
+
+The Vulkan Loader can also be built on the device using the following steps:
+    $sudo apt-get update 
+    $sudo apt-get install git build-essential libx11-xcb-dev libxkbcommon-dev libwayland-dev libxrandr-dev
+    $git clone https://github.com/KhronosGroup/Vulkan-Loader.git
+    $cd Vulkan-Loader && mkdir build && cd build
+    $../scripts/update_deps.py
+    $cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install ..
+    $make -j8
+    $make install
+
+To use the newly built loader:
+$ export LD_LIBRARY_PATH=$(pwd)/loader 
+
+4. Build NvOF-SDK
+
+a) download Optical_Flow_SDK5.0.7.zip
+b) $cd ~/pkg/Optical_Flow_SDK5.0.7/NvOFBasicSamples/build 
+   $cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=. ..
+   $make -j6
+c) run basic samples
+
+#---eof---
+
