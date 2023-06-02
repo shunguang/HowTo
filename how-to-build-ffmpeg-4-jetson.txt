@@ -1,3 +1,6 @@
+-----------------------------------------------------------------------
+This document describes how to build ffmpeg with nvmpi patch on jetson 
+-----------------------------------------------------------------------
 
 ref: https://github.com/jocover/jetson-ffmpeg
 
