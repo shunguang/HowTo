@@ -1,0 +1,25 @@
+1 in windows
+
+a) install perl strawbeery (https://strawberryperl.com/)
+
+b) install openDDS
+	c:\pkg\openDDS>git clone https://github.com/OpenDDS/OpenDDS.git
+	c:\pkg\openDDS\openDDS>configure --compiler="C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX64\x64\cl.exe"
+	C:\pkg\openDDS\OpenDDS>DDS_TAOv2.sln
+	i) choose debug and release x64 to build
+	ii) build solution: first time has some errors
+	iii) then build the solution again all the errors are gone)
+  
+ 2. in linux
+ a) ~/pkg$ git clone https://github.com/OpenDDS/OpenDDS.git
+ b) cd OpenDDS
+ c) ~/pkg/OpenDDS$ ./configure (To enable Java bindings, use ./configure --java)
+ d) ~/pkg/OpenDDS$ make
+    ~/pkg/OpenDDS$ sudo make install INSTALL_PREFIX=/usr/local
+ e) run samples
+    1) source setenv.sh
+    2) cd DevGuideExamples/DCPS/Messenger for C++ example or cd java/tests/messenger for Java example
+    3)./run_test.pl
+    
+ 
+ 
