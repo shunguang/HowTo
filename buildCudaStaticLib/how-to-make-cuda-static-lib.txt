@@ -1,0 +1,93 @@
+1. build deviceQuery
+nvidia@ubuntu:/usr/local/cuda-11.4/samples/1_Utilities/deviceQuery$ sudo make
+
+2. find device arch #  arch=sm_72
+nvidia@ubuntu:/usr/local/cuda-11.4/samples/1_Utilities/deviceQuery$ sudo ./deviceQuery
+./deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+Detected 1 CUDA Capable device(s)
+
+Device 0: "Xavier"
+  CUDA Driver Version / Runtime Version          11.4 / 11.4
+  CUDA Capability Major/Minor version number:    7.2
+  Total amount of global memory:                 14899 MBytes (15622434816 bytes)
+  (008) Multiprocessors, (064) CUDA Cores/MP:    512 CUDA Cores
+  GPU Max Clock rate:                            1377 MHz (1.38 GHz)
+  Memory Clock rate:                             1377 Mhz
+  Memory Bus Width:                              256-bit
+  L2 Cache Size:                                 524288 bytes
+
+3. assume we have cuda_samp1.cuh, cuda_samp1.cu, cuda_samp2.cuh, cuda_samp2.cu in test/ folder
+cd test/
+$nvcc -rdc=true -c -o t1.o cuda_samp1.cu 
+$nvcc -rdc=true -c -o t2.o cuda_samp2.cu 
+$nvcc -dlink -o f1.o t1.o -lcudart_static 
+$nvcc -dlink -o f2.o t2.o -lcudart_static 
+$ar cru libTexture.a f1.o f2.o t1.o t2.o
+$ranlib libTexture.a
+
+
+Ref
+[1] https://stackoverflow.com/questions/26893588/creating-a-static-cuda-library-to-be-linked-with-a-c-program
+
+$ cat GPUFloydWarshall.cu
+#include <stdio.h>
+
+__global__ void mykernel(){
+  printf("hello\n");
+}
+
+void gpu_fw(){
+  mykernel<<<1,1>>>();
+  cudaDeviceSynchronize();
+}
+
+
+$ cat main.cpp
+#include <stdio.h>
+
+void gpu_fw();
+
+int main(){
+
+  gpu_fw();
+}
+
+$ nvcc   -rdc=true -c -o temp.o GPUFloydWarshall.cu
+$ nvcc -dlink -o GPUFloydWarshall.o temp.o -lcudart
+$ rm -f libgpu.a
+$ ar cru libgpu.a GPUFloydWarshall.o temp.o
+$ ranlib libgpu.a
+$ g++ main.cpp -L. -lgpu -o main -L/usr/local/cuda/lib64 -lcudart
+$ ./main
+hello
+$
+
+
+[2] https://stackoverflow.com/questions/16289086/how-to-link-host-code-with-a-static-cuda-library-after-separable-compilation
+
+
+
+
+When you link with nvcc, it does an implicit device link along with the host link. If you use the host compiler to link (like with g++), then you need to add an explicit step to do a device link with the –dlink option, e.g.
+
+nvcc –arch=sm_35 –dc a.cu b.cu
+nvcc –arch=sm_35 –dlink a.o b.o –o dlink.o
+g++ a.o b.o dlink.o x.cpp –lcudart
+
+There is an example of exactly this in the Using Separate Compilation chapter of the nvcc doc.
+
+Currently we only support static libraries for relocatable device code. We’d be interested in learning how you would want to use such code in a dynamic library. Please feel free to answer in the comments.
+
+Edit:
+
+To answer the question in the comment below " Is there any way to use nvcc to turn mylib.a into something that can be put into g++?"
+
+Just use the library like an object, like this:
+
+nvcc –arch=sm_35 –dlink mylib.a –o dlink.o
+g++ mylib.a dlink.o x.cpp –lcudart
+
+
