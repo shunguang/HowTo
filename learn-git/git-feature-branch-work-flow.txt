@@ -1,0 +1,61 @@
+Feature branch workflow
+
+Part 1: To merge changes from a local branch to a feature branch, follow this workflow.
+
+1.	Clone the project if you haven’t already:
+	git clone git@example.com:project-name.git
+	
+2.	Change directories so you are in the project directory.
+
+3.	Create a branch for your feature:
+	git checkout -b feature_branch_name
+	
+4.	Write code for the feature and add it into staging area
+	git add *.cpp
+	git commit -am "My feature is ready"
+	
+5.	Push your branch to GitLab:
+	git push origin feature_branch_name
+	
+6.	Review your code at GitLab:  On the left sidebar, go to Code > Commits.
+
+7.	Create a merge request. 
+
+	a)	On the left sidebar, at the top, select Search GitLab () to find your project.
+	b)	Select Code > Merge requests.
+	c)	In the upper-right corner, select New merge request.
+	d)	Select a source and target branch and then Compare branches and continue.
+	e)	Fill out the fields and select Create merge request.
+8.	Your team lead reviews the code and merges it to the main branch.
+
+Part 2: local merge 
+Git lab web
+
+file a  merge request
+merge 
+
+may have conflict
+
+Go to local
+local merge from feature branch (fb) to dev branch
+//working on dev
+git switch dev
+git pull
+
+//working on feature branch (fb)
+git switch fb
+git pull
+git merge dev
+
+fix conflicts and do local test
+
+git status
+git add
+git commit
+git push --set-upstream origin fb
+
+go to git lab web
+
+Part 3: other
+
+git submodule add https://gitlab.jhuapl.edu/pod/southpaw/calibInterpolation.git ./cpp/Submodules/calibInterpolation
