@@ -1,0 +1,43 @@
+How to install jtop
+(02/09/2024)
+
+A. From .whl
+
+1) download: jetson_stats-4.2.6-py3-none-any.whl
+   a) find a machine which can run python3
+   b) python3 -m pip wheel jetson_stats
+   
+2) copy jetson_stats-4.2.6-py3-none-any.whl to your target machine
+
+3) run pip install
+   pip install jetson_stats-4.2.6-py3-none-any.whl
+   (if you do not have pip, you need to use pip3 to install)
+   (this step will create  /usr/local/jetson_stats/jtop.service)
+   
+4) setup systemctl
+ $cp /usr/local/jetson_stats/jtop.service /etc/systemd/system
+ $systemctl daemon-reload
+ $systemctl enable jtop.service
+ $systemctl start jtop.service
+ 
+ 
+ -------------side notes about where jtop.service should be located ----------
+ > w: aha, the service file must be at /etc/systemd/system. i gave the full 
+      path of jtop.service, but still has error then just gave up.   
+	  the service name is also the file name, but in a fixed folder.
+	  
+ > Q: well it doesn't necessarily need to be in /etc/systemd/system, 
+      but that's the canonical location for user-installed units
+      for example most systemd units that are installed by system 
+	  packages are in /usr/lib/systemd/system
+
+ -> W: Does that mean it can only be in one of these two locations?
+ -> Q: it has to be in a location that's in systemd's search path
+       those two locations are part of that search path
+	   
+B. from apt
+	   $ sudo apt update
+	   $ sudo apt install python3-pip
+	   $ sudo pip3 install -U jetson-stats
+	   $ jtop
+--eof--	   
