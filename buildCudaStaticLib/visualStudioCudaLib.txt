@@ -1,0 +1,2 @@
+1. right click YourProject 
+2. Build dependencies -> build customizztions -> CUDA  11.0 -> OK
