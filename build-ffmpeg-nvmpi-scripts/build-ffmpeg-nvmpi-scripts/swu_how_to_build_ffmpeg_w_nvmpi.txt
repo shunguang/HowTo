@@ -1,0 +1,120 @@
+1) unalias cmake -->clearmake      (done)
+
+
+2) pkg Jetson_Multimedia_API_R36.4.0_aarch64.tbz2 
+    download Jetson_Multimedia_API_R36.4.0_aarch64.tbz2 from nvidia webpage in windows machine
+   -> copy to ~/pkg ->  extract to ~/pkg/          
+   -> mv ~/pkg/usr/jetson_multimedia_api /usr/src/.
+
+
+3) pkg jetson-ffmpeg
+  a) in window:
+  git clone https://github.com/jocover/jetson-ffmpeg.git
+
+  b) tar and copy to ~/pkg/jetson-ffmpeg.tar
+  c) untar to ~/pkg/jetson-ffmpeg  
+  d) edit ~/pkg/jetson-ffmpeg/nvmpi.pc.in
+  e) build & install
+    cd /home/osi/pkg/jetson-ffmpeg  
+    mkdir build
+    cd build
+    cmake .. -DLIB_NVBUFSURFACE=/usr/lib64/nvidia/libnvbufsurface.so -DLIB_NVBUFSURFTRANSFORM=/usr/lib64/nvidia/libnvbufsurftransform.so -DLIB_NVJPEG=/usr/lib64/nvidia/libnvjpeg.so -DLIB_V4L2=/usr/lib64/libv4l2.so
+    make -j8
+    su
+    make install
+
+
+4)pkg x264
+ a) in windows:
+    git clone git://git.videolan.org/x264.git
+ b) tar and copy to ~/pkg/x264-master.tar.bz2	
+ c) untar to ~/pkg/x264-master
+ d) build & install
+  ~/pkg$cd x264-master
+  ~/pkg/x264-master$ echo "Building x264..."
+  ~/pkg/x264-master$ ./configure --prefix=/usr/local --enable-pic --enable-shared 
+  ~/pkg/x264-master$ make 
+  ~/pkg/x264-master$ su
+  ~/pkg/x264-master$ make install
+
+
+5) ffmpeg
+   a) in windows:
+   git clone git clone git://source.ffmpeg.org/ffmpeg.git -b release/4.2 --depth=1
+
+   b) tar and copy to ~/pkg/ffmpeg.tar
+   c) untar to ~/pkg/ffmpeg
+   g) build ffmpeg
+      - cp ~/pkg/build-scripts/swu_fix_crlf.sh ~/pkg/ffmpeg/.
+	  - cp ~/pkg/build-scripts/swu_build_configure.sh ~/pkg/ffmpeg/.
+	  - cp ~/pkg/jetson-ffmpeg/ffmpeg_patches/ffmpeg4.2_nvmpi.patch  ~/pkg/ffmpeg/.
+
+	  - cd ~/pkg/ffmpeg
+	  - ~/pkg/ffmpeg$ git apply ffmpeg4.2_nvmpi.patch
+	  - ~/pkg/ffmpeg$ ./swu_fix_crlf.sh
+      - ~/pkg/ffmpeg$ ./swu_build_configure.sh
+  	  - ~/pkg/ffmpeg$ make j8
+	  - ~/pkg/ffmpeg$ su
+	  - ~/pkg/ffmpeg$ make install
+
+6) verify
+    $ which ffmpeg
+	  /osi/tools/osi_sys26_0_0_int_tml3/bin64/ffmpeg
+	$ edit  ~/.cshrc
+	  (add setenv PATH /usr/local/bin:${PATH} at the last line)
+    $source ~/.cshrc
+	$rehash
+    $ which ffmpeg
+      /usr/local/bin/ffmpeg
+	$ ffmpeg -encoders | grep -E 'h264|hevc'
+    $ ffmpeg -decoders | grep -E 'h264|hevc'
+    
+
+------my verifications --------------------
+
+535 osi@aerostat()[osi_sys26_0_0_int_tml3:tml3.AEROSTAT_APY11:10] ~/pkg $ which ffmpeg
+/usr/local/bin/ffmpeg
+	
+533 osi@aerostat()[osi_sys26_0_0_int_tml3:tml3.AEROSTAT_APY11:10] ~/pkg $ ffmpeg -encoders | grep -E 'h264|hevc'
+ffmpeg version 84357c0 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 11 (GCC)
+  configuration: --enable-static --enable-shared --enable-nonfree --enable-libnpp --enable-nvmpi --enable-gpl --disable-opencl --extra-cflags='-I/osi/tools/osi_sys26_0_0_int_tml3/cuda/include -I/usr/local/include' --extra-ldflags='-L/osi/tools/osi_sys26_0_0_int_tml3/cuda/lib64 -L/usr/local/lib -L/usr/lib/aarch64-linux-gnu' --enable-libx264 --extra-libs='-ldl -lm -lstdc++ -lpthread -lnuma' --prefix=/usr/local
+  libavutil      56. 31.100 / 56. 31.100
+  libavcodec     58. 54.100 / 58. 54.100
+  libavformat    58. 29.100 / 58. 29.100
+  libavdevice    58.  8.100 / 58.  8.100
+  libavfilter     7. 57.100 /  7. 57.100
+  libswscale      5.  5.100 /  5.  5.100
+  libswresample   3.  5.100 /  3.  5.100
+  libpostproc    55.  5.100 / 55.  5.100
+ V..... h264_nvmpi           nvmpi H.264 encoder wrapper (codec h264)
+ V..... libx264              libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (codec h264)
+ V..... libx264rgb           libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 RGB (codec h264)
+ V..... h264_v4l2m2m         V4L2 mem2mem H.264 encoder wrapper (codec h264)
+ V..... h264_vaapi           H.264/AVC (VAAPI) (codec h264)
+ V..... hevc_nvmpi           nvmpi HEVC encoder wrapper (codec hevc)
+ V..... hevc_v4l2m2m         V4L2 mem2mem HEVC encoder wrapper (codec hevc)
+ V..... hevc_vaapi           H.265/HEVC (VAAPI) (codec hevc)
+
+534 osi@aerostat()[osi_sys26_0_0_int_tml3:tml3.AEROSTAT_APY11:10] ~/pkg $ ffmpeg -decoders | grep -E 'h264|hevc'
+ffmpeg version 84357c0 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 11 (GCC)
+  configuration: --enable-static --enable-shared --enable-nonfree --enable-libnpp --enable-nvmpi --enable-gpl --disable-opencl --extra-cflags='-I/osi/tools/osi_sys26_0_0_int_tml3/cuda/include -I/usr/local/include' --extra-ldflags='-L/osi/tools/osi_sys26_0_0_int_tml3/cuda/lib64 -L/usr/local/lib -L/usr/lib/aarch64-linux-gnu' --enable-libx264 --extra-libs='-ldl -lm -lstdc++ -lpthread -lnuma' --prefix=/usr/local
+  libavutil      56. 31.100 / 56. 31.100
+  libavcodec     58. 54.100 / 58. 54.100
+  libavformat    58. 29.100 / 58. 29.100
+  libavdevice    58.  8.100 / 58.  8.100
+  libavfilter     7. 57.100 /  7. 57.100
+  libswscale      5.  5.100 /  5.  5.100
+  libswresample   3.  5.100 /  3.  5.100
+  libpostproc    55.  5.100 / 55.  5.100
+ VFS..D h264                 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10
+ V..... h264_nvmpi           h264 (nvmpi) (codec h264)
+ V..... h264_v4l2m2m         V4L2 mem2mem H.264 decoder wrapper (codec h264)
+ VFS..D hevc                 HEVC (High Efficiency Video Coding)
+ V..... hevc_nvmpi           hevc (nvmpi) (codec hevc)
+ V..... hevc_v4l2m2m         V4L2 mem2mem HEVC decoder wrapper (codec hevc)
+
+------------- eof----------------
+
+
