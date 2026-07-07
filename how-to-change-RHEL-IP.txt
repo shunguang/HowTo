@@ -1,0 +1,31 @@
+nmcli connection show
+NAME UUID                                  TYPE      DEVICE
+APL  xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  ethernet  enp1s0
+---- ip: 192.168.7.71, mask 255.255.252.0 ----
+
+nmcli device status
+
+sudo nmcli connection modify "APL" \
+    ipv4.addresses 192.168.7.71/22 \
+    ipv4.method manual
+	
+	
+sudo nmcli connection modify "APL" \
+    ipv4.addresses 192.168.7.71/22 \
+    ipv4.gateway 192.168.4.1 \
+    ipv4.method manual
+	
+sudo nmcli connection modify "APL" \
+    ipv4.addresses 192.168.7.71/22 \
+    ipv4.gateway 192.168.4.1 \
+    ipv4.dns "8.8.8.8 1.1.1.1" \
+    ipv4.method manual
+	
+sudo nmcli connection down "APL"
+sudo nmcli connection up "APL"
+	
+	
+nmcli connection show "APL"
+ip addr show
+ip route
+	
