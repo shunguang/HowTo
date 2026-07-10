@@ -3,8 +3,11 @@
 
 2) pkg Jetson_Multimedia_API_R36.4.0_aarch64.tbz2 
     download Jetson_Multimedia_API_R36.4.0_aarch64.tbz2 from nvidia webpage in windows machine
-   -> copy to ~/pkg ->  extract to ~/pkg/          
-   -> mv ~/pkg/usr/jetson_multimedia_api /usr/src/.
+   -> copy to /home/osi/pkg ->  extract to /home/osi/pkg/ 
+   -> cd /home/osi/pkg
+   -> /home/osi/pkg$tar -xjf Jetson_Multimedia_API_R36.4.0_aarch64.tbz2
+   -> (this  will create  /home/osi/pkg/usr folder)
+   -> /home/osi/pkg$ mv usr/src/jetson_multimedia_api /usr/src/.
 
 
 3) pkg jetson-ffmpeg
@@ -40,27 +43,46 @@
 
 5) ffmpeg
    a) in windows:
-   git clone git clone git://source.ffmpeg.org/ffmpeg.git -b release/4.2 --depth=1
+  git clone git clone git://source.ffmpeg.org/ffmpeg.git -b release/4.2 --depth=1
 
    b) tar and copy to ~/pkg/ffmpeg.tar
-   c) untar to ~/pkg/ffmpeg
+   c) [osi@...]~/pkg/ffmpeg$ tar -xf ffmpeg.tar
    g) build ffmpeg
-      - cp ~/pkg/build-scripts/swu_fix_crlf.sh ~/pkg/ffmpeg/.
-	  - cp ~/pkg/build-scripts/swu_build_configure.sh ~/pkg/ffmpeg/.
-	  - cp ~/pkg/jetson-ffmpeg/ffmpeg_patches/ffmpeg4.2_nvmpi.patch  ~/pkg/ffmpeg/.
+      - [osi@...]~/pkg/ffmpeg$cp ~/pkg/build-ffmpeg-nvmpi-scripts/swu_fix_crlf.sh .
+	  - [osi@...]~/pkg/ffmpeg$cp ~/pkg/build-ffmpeg-nvmpi-scripts/swu_build_configure.sh .
+	  - [osi@...]~/pkg/ffmpeg$cp ~/pkg/jetson-ffmpeg/ffmpeg_patches/ffmpeg4.2_nvmpi.patch  .
+	      note:
+	      1) check files in ~/pkg/jetson-ffmpeg/ffmpeg_patches/
+          2) using "git branch"  check ffmpeg version to be build 
+		  3) make sure the appiled patch matches in ffmpeg version
 
-	  - cd ~/pkg/ffmpeg
-	  - ~/pkg/ffmpeg$ git apply ffmpeg4.2_nvmpi.patch
-	      i)  check ~/pkg/jetson-ffmpeg/ffmpeg_patches/,
-          ii) check ffmpeg version to be build
-		  iii) make sure teh appiled patch matches in ffmpeg version)
-		  
-		  
-	  - ~/pkg/ffmpeg$ ./swu_fix_crlf.sh
-      - ~/pkg/ffmpeg$ ./swu_build_configure.sh
-  	  - ~/pkg/ffmpeg$ make j8
-	  - ~/pkg/ffmpeg$ su
-	  - ~/pkg/ffmpeg$ make install
+
+	  - [osi@...]~/pkg/ffmpeg$ git apply ffmpeg4.2_nvmpi.patch
+	  - [osi@...]~/pkg/ffmpeg$ ./swu_fix_crlf.sh
+
+      - find where nvmpi.pc is located 	  
+ 	   [root@aerostat ~]# find /usr -name nvmpi.pc
+	   ------------output-----------
+	   /usr/local/share/pkgconfig/nvmpi.pc
+       /usr/local/lib64/pkgconfig/nvmpi.pc
+       ----------------------------
+	  
+	   make sure these folders are executable by "other" 
+	   [osi@...] ~/pkg/ffmpeg $ ls -ld /usr /usr/local /usr/local/lib64 /usr/local/lib64/pkgconfig
+	   --------------output------------
+          drwxr-xr-x. 13 root root 4096 Feb  5  2013 /usr/
+          drwxr-xr-x. 16 root root 4096 Jul  1 15:18 /usr/local/
+          drwxr-xr-x.  4 root root 4096 Jul 10 11:53 /usr/local/lib64/
+          drwxr-x---.  2 root root 4096 Jan  1  1970 /usr/local/lib64/pkgconfig/
+       -------------------------------
+       [root@aerostat ~]# chmod 755 /usr/local/lib64/pkgconfig
+
+      - set PKG_CONFIG_PATH			
+        [osi@...] ~/pkg/ffmpeg $ setenv PKG_CONFIG_PATH /usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
+	  - [osi@...]~/pkg/ffmpeg$ chmod 755 ./buildffmpeg/*.sh	
+      - [osi@...]~/pkg/ffmpeg$ ./swu_build_configure.sh
+  	  - [osi@...]~/pkg/ffmpeg$ make j8
+	  - [root@...]/home/osi/pkg/ffmpeg$ make install
 
 6) verify
     $ which ffmpeg
