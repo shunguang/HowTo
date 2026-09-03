@@ -1,0 +1,60 @@
+FROM nvcr.io/nvidia/l4t-jetpack:r36.4.0
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# ----------------------------------------------------------------------
+# Build tools and FFmpeg dependencies
+# ----------------------------------------------------------------------
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        pkg-config \
+        yasm \
+        nasm \
+        autoconf \
+        automake \
+        libtool \
+        wget \
+        curl \
+        ca-certificates \
+        libnuma-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# ----------------------------------------------------------------------
+# CUDA
+# ----------------------------------------------------------------------
+ENV PATH=/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/lib64/nvidia:/usr/local/lib
+
+# ----------------------------------------------------------------------
+# Libraries installed manually into /usr/local should be discoverable
+# by pkg-config.
+# ----------------------------------------------------------------------
+ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
+
+# ----------------------------------------------------------------------
+# Make /usr/local/lib visible to the dynamic linker.
+# NVmpi will eventually be installed here:
+#
+#   /usr/local/lib/libnvmpi.so
+#
+# ----------------------------------------------------------------------
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
+    echo "/usr/lib64/nvidia" > /etc/ld.so.conf.d/nvidia.conf && \
+    ldconfig
+
+# ----------------------------------------------------------------------
+# Development directory
+#
+# Host:
+#   $HOME/test
+#
+# Container:
+#   /test
+# ----------------------------------------------------------------------
+WORKDIR /test
+
+CMD ["/bin/bash"]
+
